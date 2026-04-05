@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shatner — Lightning round (2026)</title>
+  <style>
+    :root {
+      --bg: #0c0a09;
+      --surface: #1c1917;
+      --text: #fafaf9;
+      --muted: #a8a29e;
+      --accent: #2dd4bf;
+      --accent-dim: rgba(45, 212, 191, 0.15);
+      --warn: #fbbf24;
+      --border: #292524;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 1rem 1rem 2rem;
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.45;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .wrap {
+      max-width: 44rem;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .sub {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .flash {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+
+    .flash .box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      text-align: center;
+    }
+
+    .flash .box.big {
+      grid-column: 1 / -1;
+      background: linear-gradient(145deg, var(--accent-dim), transparent);
+      border-color: rgba(45, 212, 191, 0.35);
+    }
+
+    .flash dt {
+      margin: 0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .flash dd {
+      margin: 0.2rem 0 0;
+      font-family: var(--mono);
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .flash .box:not(.big) dd {
+      font-size: 1.15rem;
+      color: var(--text);
+    }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    section h2 {
+      margin: 0 0 0.65rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+
+    ol.steps {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    ol.steps li {
+      margin-bottom: 0.4rem;
+    }
+
+    ol.steps li strong {
+      color: var(--warn);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.45rem 0.35rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .pri {
+      width: 1.5rem;
+      font-family: var(--mono);
+      font-weight: 800;
+      color: var(--accent);
+      vertical-align: top;
+    }
+
+    .names {
+      font-size: 0.8rem;
+      color: #d6d3d1;
+      line-height: 1.35;
+    }
+
+    .names .muted {
+      color: #78716c;
+      font-size: 0.92em;
+    }
+
+    ol.rank {
+      margin: 0;
+      padding-left: 1.2rem;
+      font-size: 0.78rem;
+      line-height: 1.42;
+      color: #d6d3d1;
+    }
+
+    ol.rank li {
+      margin-bottom: 0.12rem;
+    }
+
+    ol.rank li::marker {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .slot {
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .money {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--warn);
+      white-space: nowrap;
+    }
+
+    ul.tight {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.88rem;
+    }
+
+    ul.tight li {
+      margin-bottom: 0.35rem;
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.65rem;
+    }
+
+    details.board-more {
+      margin-top: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.4rem 0.65rem;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    details.board-more summary {
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 650;
+      color: var(--accent);
+    }
+
+    details.board-more .rank {
+      margin-top: 0.45rem;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    footer {
+      margin-top: 1.25rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0.5in; }
+      .flash dd { color: #0f766e; }
+      section { break-inside: avoid; border-color: #ccc; }
+      a { color: #000; text-decoration: underline; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Lightning round — Shatner</h1>
+      <p class="sub">NL-only · auction <strong>complete</strong> — see <a href="Sidd Finch 2026 Draft.html">Sidd Finch 2026 Draft</a></p>
+      <dl class="flash" aria-label="Live snapshot">
+        <div class="box big">
+          <dt>Remaining</dt>
+          <dd>$0</dd>
+        </div>
+        <div class="box">
+          <dt>Open slots</dt>
+          <dd>0</dd>
+        </div>
+        <div class="box">
+          <dt>You nom</dt>
+          <dd>4th</dd>
+        </div>
+      </dl>
+    </header>
+
+    <section aria-labelledby="holes-heading">
+      <h2 id="holes-heading">Holes (worksheet)</h2>
+      <p style="margin:0;font-size:0.9rem"><strong>No holes</strong> — final worksheet has all <strong>23</strong> slots filled at <strong>$260</strong>. Full roster, draft order, dollars, and grades: <a href="Sidd Finch 2026 Draft.html"><strong>Sidd Finch 2026 Draft</strong></a>. Live worksheet copy: <a href="shatners.html">shatners.html</a>.</p>
+    </section>
+
+    <section aria-labelledby="targets-heading">
+      <h2 id="targets-heading">Big board — uncrossed (NL only)</h2>
+      <p class="note" style="margin:0 0 0.75rem"><strong>Archive:</strong> Board photos from mid-auction — <a href="assets/board-hitters-remaining-2026.png">hitters</a> · <a href="assets/board-pitchers-remaining-2026.png">pitchers</a>. Shatner’s roster is <strong>closed</strong> (<strong>$0</strong> left); tables below are <strong>historical reference</strong> only.</p>
+      <p class="note" style="margin:0 0 0.5rem;font-size:0.76rem">The <strong>#</strong> column was endgame priority when holes remained; ignore for in-season management.</p>
+      <table aria-label="Uncrossed names from room board photos, NL draftable">
+        <thead>
+          <tr>
+            <th class="pri">#</th>
+            <th>Your hole</th>
+            <th>Uncrossed on your photos <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">(best → worst)</span></th>
+            <th class="money">Shatner walk<br><span class="muted" style="font-weight:400;font-size:0.62rem">whole position</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="pri">4</td>
+            <td class="slot">P <span class="muted">(full)</span></td>
+            <td class="names">
+              <p class="note" style="margin:0 0 0.5rem"><strong>All pitcher slots filled</strong> — Lowder (CIN) $2 was the last. The lists below are <strong>reference / burn noms only</strong>, not roster holes.</p>
+              <p class="note" style="margin:0 0 0.35rem">Uncrossed on <a href="assets/board-pitchers-remaining-2026.png">pitcher strips</a> (ARI block with circled <strong>P.</strong>, plus ATL + CHC columns). SP vs RP not marked on every line—confirm role.</p>
+              <ol class="rank">
+                <li>Brandon Pfaadt (ARI)</li>
+                <li>Tommy Henry (ARI)</li>
+                <li>Slade Jameson (ARI)</li>
+                <li>Rodriguez (ARI) <span class="muted">— as printed</span></li>
+                <li>Bryce Elder (ATL)</li>
+                <li>Spencer Schwellenbach (ATL)</li>
+                <li>Jameson Taillon (CHC)</li>
+                <li>Justin Steele (CHC)</li>
+                <li>Ben Brown (CHC)</li>
+                <li>Javier Assad (CHC)</li>
+                <li>Beeks (ARI)</li>
+                <li>Clarke (ARI)</li>
+                <li>Curtiss (ARI)</li>
+                <li>Morillo (ARI)</li>
+                <li>Hatch (ARI)</li>
+                <li>Dubin (ARI) <span class="muted">— spelling per slip</span></li>
+                <li>Saalfrank (ARI)</li>
+                <li>Strowd (ARI)</li>
+                <li>Kevin Ginkel (ARI)</li>
+                <li>Jarvis (ARI)</li>
+                <li>Murcta (ARI) <span class="muted">— spelling per slip</span></li>
+                <li>Martinez (ARI)</li>
+                <li>Garcia (ARI)</li>
+                <li>Burgos (ARI)</li>
+                <li>Hoffmann (ARI)</li>
+                <li>Wentz (ATL)</li>
+                <li>Tyler Kinley (ATL)</li>
+                <li>Suarez (ATL) <span class="muted">— verify which</span></li>
+                <li>Lee (ATL)</li>
+                <li>Hurston Waldrep (ATL)</li>
+                <li>Perez (ATL)</li>
+                <li>Aaron Bummer (ATL)</li>
+                <li>A.J. Smith-Shawver (ATL)</li>
+                <li>Hamilton (ATL)</li>
+                <li>Hernandez (ATL)</li>
+                <li>Dodd (ATL)</li>
+                <li>Molina (ATL)</li>
+                <li>Scott (ATL)</li>
+                <li>Nico Payamps (ATL)</li>
+                <li>Cox (ATL)</li>
+                <li>Stratton (ATL)</li>
+                <li>Fuentes (ATL)</li>
+                <li>Young (ATL)</li>
+                <li>Rea (CHC)</li>
+                <li>Milner (CHC)</li>
+                <li>Webb (CHC) <span class="muted">— pen sheet</span></li>
+                <li>Maton (CHC)</li>
+                <li>Thielbar (CHC)</li>
+                <li>Ross (CHC)</li>
+                <li>Rollison (CHC)</li>
+                <li>Hodge (CHC)</li>
+                <li>Snider (CHC)</li>
+                <li>Martin (CHC)</li>
+                <li>Wicks (CHC)</li>
+                <li>Harvey (CHC)</li>
+                <li>Hollowell (CHC)</li>
+              </ol>
+            </td>
+            <td class="money"><span class="muted">—</span><br><span class="muted" style="font-size:0.72rem">roster full</span></td>
+          </tr>
+          <tr>
+            <td class="pri">1</td>
+            <td class="slot">OF ×2</td>
+            <td class="names">
+              <p class="note" style="margin:0 0 0.35rem">Uncrossed OF column + hitting slips on <a href="assets/board-hitters-remaining-2026.png">hitter board</a> and left/middle strips on <a href="assets/board-pitchers-remaining-2026.png">strip board</a>. <strong>Conforto</strong> crossed off (you rostered him). <span class="muted">Order: rough fantasy priority → depth; duplicate last names need the team tag from paper.</span></p>
+              <ol class="rank">
+                <li>Lars Nootbaar (STL)</li>
+                <li>Jordan Walker (STL)</li>
+                <li>JJ Bleday (CIN)</li>
+                <li>Will Benson (CIN)</li>
+                <li>Jake McCarthy (COL)</li>
+                <li>Zac Veen (COL)</li>
+                <li>Spencer Steer (CIN)</li>
+                <li>Nick Castellanos (SD)</li>
+                <li>Tommy Pham (NYM)</li>
+                <li>Garrett Mitchell (MIL)</li>
+                <li>Robert Hassell III (WSH)</li>
+                <li>Joey Wiemer (WSH)</li>
+                <li>Grant McCray (SF)</li>
+                <li>Luis Encarnacion (SF)</li>
+                <li>Mickey Moniak (COL)</li>
+                <li>Yuli Gurriel (ARI)</li>
+                <li>Chas McCormick (CHC)</li>
+                <li>Tyler Call (LAD)</li>
+                <li>Dominic Siani (LAD)</li>
+                <li>Wil Myers (CIN)</li>
+                <li>Connor Joe (CIN)</li>
+                <li>Hinds (CIN) <span class="muted">— spelling per sheet</span></li>
+                <li>Mauricio Dubón (ATL)</li>
+                <li>Eli White (ATL)</li>
+                <li>DaShawn Keirsey Jr. (ATL)</li>
+                <li>Jose Azocar (ATL)</li>
+                <li>Justin Dean (CHC)</li>
+                <li>Luis Alcantara (CHC) <span class="muted">— as printed</span></li>
+                <li>Drew Avans (COL)</li>
+                <li>Mike Yastrzemski (ARI) <span class="muted">— slip tags ARI; confirm vs SF</span></li>
+                <li>Pavin Smith (ARI)</li>
+                <li>Church (STL) <span class="muted">— first name per slip</span></li>
+                <li>Blake Perkins (MIL)</li>
+                <li>Lockridge (MIL)</li>
+                <li>Adams (MIL)</li>
+                <li>Baddoo (MIL)</li>
+                <li>Mangum (PIT)</li>
+                <li>Fletcher (PIT)</li>
+                <li>Garcia (PIT)</li>
+                <li>Taylor (NYM)</li>
+                <li>Robert Jr. (NYM)</li>
+                <li>Rae (NYM)</li>
+                <li>Rojas (PHI)</li>
+                <li>De La Cruz (PHI)</li>
+                <li>Sheets (SD)</li>
+                <li>Hernandez (MIA)</li>
+                <li>Conine (MIA)</li>
+                <li>Ruiz (MIA)</li>
+                <li>Gilbert (SF) <span class="muted">— verify ID (pen slip)</span></li>
+              </ol>
+            </td>
+            <td class="money"><span class="muted">—</span><br><span class="muted" style="font-size:0.72rem">roster full</span></td>
+          </tr>
+          <tr>
+            <td class="pri">2</td>
+            <td class="slot">MI</td>
+            <td class="names">
+              <p class="note" style="margin:0 0 0.35rem">Uncrossed <strong>2B</strong> + <strong>SS</strong> columns on <a href="assets/board-hitters-remaining-2026.png">hitter board</a>. Then <strong>3B</strong> column (same board).</p>
+              <p class="note" style="margin:0.35rem 0 0.25rem"><strong>2B</strong></p>
+              <ol class="rank">
+                <li>Tawa (ARI)</li>
+                <li>Mateo (ATL)</li>
+                <li>Miller (CHC)</li>
+                <li>McLain (CIN)</li>
+                <li>Callihan (CIN)</li>
+                <li>Julien (COL)</li>
+                <li>Amador (COL)</li>
+                <li>Lopez (COL)</li>
+                <li>Kim (LAD)</li>
+                <li>Morel (MIA)</li>
+                <li>Durbin (MIL)</li>
+                <li>Urias (MIL)</li>
+                <li>Monasterio (MIL)</li>
+                <li>Seigler (MIL)</li>
+                <li>Polanco (NYM)</li>
+                <li>Mauricio (NYM)</li>
+                <li>Moore (PHI)</li>
+                <li>Gonzales (PIT)</li>
+                <li>Valdez (PIT)</li>
+                <li>Simon (PIT)</li>
+                <li>Yorke (PIT)</li>
+                <li>Wagner (SD)</li>
+                <li>Taylor (SD)</li>
+                <li>Saggese (STL)</li>
+                <li>Fermin (STL)</li>
+                <li>Prieto (STL)</li>
+              </ol>
+              <p class="note" style="margin:0.45rem 0 0.25rem"><strong>SS</strong></p>
+              <ol class="rank" start="27">
+                <li>Amaya (ARI)</li>
+                <li>Fernandez (ARI)</li>
+                <li>Farmer (ATL)</li>
+                <li>Alvarez (ATL)</li>
+                <li>Kim (ATL)</li>
+                <li>Williams (ATL)</li>
+                <li>Hampson (CIN)</li>
+                <li>Ritter (COL)</li>
+                <li>Freeland (LAD)</li>
+                <li>Sanoja (MIA)</li>
+                <li>Peguero (PHI)</li>
+                <li>Koss (SF)</li>
+                <li>Fitzgerald (SF)</li>
+                <li>Winn (STL)</li>
+                <li>Wetherholt (STL)</li>
+                <li>Nunez (WSH)</li>
+              </ol>
+              <p class="note" style="margin:0.45rem 0 0.25rem"><strong>3B</strong></p>
+              <ol class="rank" start="43">
+                <li>Vargas (ARI)</li>
+                <li>Espinal (LAD)</li>
+                <li>Marte (CIN)</li>
+                <li>Freeman (COL)</li>
+                <li>Karros (COL)</li>
+                <li>Hernandez (LAD)</li>
+                <li>Norby (MIA)</li>
+                <li>Pauley (MIA)</li>
+                <li>Ortiz (MIL)</li>
+                <li>Hamilton (MIL)</li>
+                <li>Triolo (PIT)</li>
+                <li>Urias (STL)</li>
+                <li>Tena (WSH)</li>
+              </ol>
+            </td>
+            <td class="money"><span class="muted">—</span><br><span class="muted" style="font-size:0.72rem">roster full</span></td>
+          </tr>
+          <tr>
+            <td class="pri">3</td>
+            <td class="slot">CI</td>
+            <td class="names">
+              <p class="note" style="margin:0 0 0.35rem">Uncrossed <strong>1B</strong> column on <a href="assets/board-hitters-remaining-2026.png">hitter board</a>.</p>
+              <ol class="rank">
+                <li>Locklear (ARI)</li>
+                <li>Smith (ATL)</li>
+                <li>Toglia (CIN)</li>
+                <li>Encar-Strand (CIN) <span class="muted">— spelling per sheet</span></li>
+                <li>Johnston (COL)</li>
+                <li>Rumfield (COL)</li>
+                <li>Freeman (LAD)</li>
+                <li>Vaughn (MIL)</li>
+                <li>Hoskins (MIL)</li>
+                <li>Bauers (MIL)</li>
+                <li>Horwitz (PIT)</li>
+                <li>Eldridge (SF)</li>
+                <li>Mervis (WSH)</li>
+              </ol>
+            </td>
+            <td class="money"><span class="muted">—</span><br><span class="muted" style="font-size:0.72rem">roster full</span></td>
+          </tr>
+          <tr>
+            <td class="pri">5</td>
+            <td class="slot">NP/P</td>
+            <td class="names">
+              <p class="note" style="margin:0 0 0.35rem"><strong>Ohtani (H)</strong> on your hand sheet—cost blank; confirm host. Overlap with CI / OF above.</p>
+              <ol class="rank">
+                <li>Toglia (CIN)</li>
+                <li>Encar-Strand (CIN)</li>
+                <li>Mervis (WSH)</li>
+                <li>Steer (CIN)</li>
+                <li>Myers (CIN)</li>
+                <li>Joe (CIN)</li>
+                <li>Castellanos (SD)</li>
+              </ol>
+            </td>
+            <td class="money"><span class="muted">—</span><br><span class="muted" style="font-size:0.72rem">roster full</span></td>
+          </tr>
+          <tr>
+            <td class="pri">—</td>
+            <td class="slot">C</td>
+            <td class="names">
+              <p class="note" style="margin:0 0 0.5rem"><strong>Both C slots filled</strong> on your worksheet—burn-only. Uncrossed <strong>C</strong> column on <a href="assets/board-hitters-remaining-2026.png">hitter board</a>.</p>
+              <ol class="rank">
+                <li>Del Castillo (ARI)</li>
+                <li>McCann (ARI)</li>
+                <li>Baldwin (ATL)</li>
+                <li>Kelly (CHC)</li>
+                <li>Ballesteros (CHC)</li>
+                <li>Trevino (CHC)</li>
+                <li>Fulford (COL)</li>
+                <li>Sullivan (COL)</li>
+                <li>Rushing (LAD)</li>
+                <li>Ramirez (MIA)</li>
+                <li>Hicks (MIA)</li>
+                <li>Quero (MIL)</li>
+                <li>Sanchez (MIL)</li>
+                <li>Torrens (NYM)</li>
+                <li>Senger (NYM)</li>
+                <li>Realmuto (PHI)</li>
+                <li>Marchan (PHI)</li>
+                <li>Stubbs (PHI)</li>
+                <li>Bart (PIT)</li>
+                <li>Davis (PIT)</li>
+                <li>Rodriguez (PIT)</li>
+                <li>Diaz (SD)</li>
+                <li>Campusano (SD)</li>
+                <li>Pages (STL)</li>
+                <li>Pozo (STL)</li>
+                <li>Crooks (STL)</li>
+                <li>Adams (STL)</li>
+                <li>Millas (WSH)</li>
+                <li>Ford (WSH)</li>
+              </ol>
+            </td>
+            <td class="money"><span class="muted">—</span><br><span class="muted" style="font-size:0.72rem">roster full</span></td>
+          </tr>
+          <tr>
+            <td class="pri">—</td>
+            <td class="slot">SV</td>
+            <td class="names">
+              <p class="note" style="margin:0 0 0.35rem">Relievers still uncrossed on <a href="assets/board-pitchers-remaining-2026.png">pitcher strips</a> (subset of P list).</p>
+              <ol class="rank">
+                <li>Kevin Ginkel (ARI)</li>
+                <li>Tyler Kinley (ATL)</li>
+                <li>Suarez (ATL) <span class="muted">— verify which</span></li>
+                <li>Aaron Bummer (ATL)</li>
+                <li>A.J. Smith-Shawver (ATL)</li>
+                <li>Scott (ATL)</li>
+                <li>Nico Payamps (ATL)</li>
+                <li>Cox (ATL)</li>
+                <li>Stratton (ATL)</li>
+                <li>Fuentes (ATL)</li>
+                <li>Young (ATL)</li>
+                <li>Milner (CHC)</li>
+                <li>Thielbar (CHC)</li>
+                <li>Maton (CHC)</li>
+                <li>Hodge (CHC)</li>
+                <li>Snider (CHC)</li>
+                <li>Hollowell (CHC)</li>
+              </ol>
+            </td>
+            <td class="money"><span class="muted">—</span><br><span class="muted" style="font-size:0.72rem">roster full</span></td>
+          </tr>
+        </tbody>
+
+
+      </table>
+      <p class="note">Transcribed from your <strong>remaining-board</strong> photos (only <strong>uncrossed</strong> names). If the room strikes someone after the photo, skip them. Duplicate last names need the <strong>team abbreviation</strong> from the slip.</p>
+    </section>
+
+    <section aria-labelledby="rules-heading">
+      <h2 id="rules-heading">Non-negotiables</h2>
+      <ul class="tight">
+        <li>Open almost everything at <strong>$1</strong> if you want it.</li>
+        <li>At <strong>$15+</strong> high bid → raises are <strong>$5</strong> steps only.</li>
+        <li><strong>Default pass $15+</strong> unless obvious misprice.</li>
+        <li>Guardrail: <strong>(remaining − price) ≥ (empty slots − 1)</strong> in dollars.</li>
+      </ul>
+      <p class="note">After each Shatner win: bump <strong>Remaining</strong> and slot counts at the top of this page. (Sync <a href="shatners.html">shatners.html</a> only when you want the full log updated.)</p>
+    </section>
+
+    <section aria-labelledby="nom-order-heading">
+      <h2 id="nom-order-heading">Turn order (each round)</h2>
+      <p style="margin:0;font-size:0.82rem;font-family:var(--mono);color:var(--muted)">1 Injury Prone → 2 Protos → 3 Kings → <strong style="color:var(--accent)">4 YOU</strong> → 5 Riga → 6 Owls → 7 UNTOUCHABLES → 8 Todd → 9 Sox → 10 ChudZ</p>
+    </section>
+
+    <footer>
+      <p style="margin:0">Full log, ownership &amp; strategy: <a href="shatners.html">shatners.html</a></p>
+    </footer>
+  </div>
+</body>
+</html>

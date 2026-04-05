@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sidd Finch — 2026 NL auction draft review</title>
+  <style>
+    :root {
+      --bg: #1e1b4b;
+      --surface: #312e81;
+      --card: #3730a3;
+      --text: #eef2ff;
+      --muted: #a5b4fc;
+      --accent: #fbbf24;
+      --good: #34d399;
+      --border: rgba(165, 180, 252, 0.25);
+      --font: ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 1.5rem 1rem 2.5rem;
+      font-family: var(--font);
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 100% 60% at 50% -10%, rgba(99, 102, 241, 0.35), transparent);
+    }
+    .wrap { max-width: 52rem; margin: 0 auto; }
+    header { margin-bottom: 1.75rem; }
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .sub { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .grades {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+    @media (max-width: 520px) { .grades { grid-template-columns: 1fr; } }
+    .grade-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      text-align: center;
+    }
+    .grade-box dt {
+      margin: 0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .grade-box dd {
+      margin: 0.35rem 0 0;
+      font-family: var(--mono);
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .grade-box .small dd { font-size: 1.65rem; color: var(--good); }
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.35rem;
+      margin-bottom: 1rem;
+    }
+    section h2 {
+      margin: 0 0 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.5rem 0.45rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    tr:last-child td { border-bottom: none; }
+    .num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    .score {
+      text-align: center;
+      font-family: var(--mono);
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+    .note { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; }
+    a { color: #a5b4fc; }
+    figure { margin: 1rem 0 0; }
+    figcaption { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
+    img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
+    ul { margin: 0.5rem 0 0; padding-left: 1.2rem; color: #c7d2fe; }
+    li { margin-bottom: 0.35rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Sidd Finch — 2026 NL auction draft</h1>
+      <p class="sub">Team <strong>Shatners</strong> · $260 cap · final worksheet + pick-by-pick grades</p>
+      <dl class="grades" aria-label="Draft grades">
+        <div class="grade-box">
+          <dt>Overall draft grade</dt>
+          <dd>8<span style="font-size:1.1rem">/10</span></dd>
+        </div>
+        <div class="grade-box small">
+          <dt>Avg pick score</dt>
+          <dd>7.7</dd>
+        </div>
+      </dl>
+    </header>
+
+    <section aria-labelledby="summary-heading">
+      <h2 id="summary-heading">How you did</h2>
+      <p style="margin:0 0 0.75rem">You finished <strong>$0</strong> remaining—full budget deployed. The roster is <strong>star-heavy up top</strong> (<strong>Ohtani</strong>, <strong>Webb</strong>, <strong>Turner</strong>) with a <strong>massive value spike</strong> if <strong>Devers</strong> truly cleared at <strong>$25</strong> on the host (that pick alone swings the whole auction). <strong>Bregman</strong> at <strong>$25</strong> and <strong>Lowe</strong> at <strong>$11</strong> are strong NL-only prices. You bought <strong>catching</strong> early-ish (<strong>Smith $20</strong>, <strong>Senger $2</strong>)—Smith is a bit more “retail” than the late $1 arms, but still a steady starter. The run of <strong>$1–2 pitching</strong> plus <strong>Buehler</strong> and <strong>Lowder</strong> is exactly how you survive after paying for aces. <strong>Norby $7</strong> for a flexible bat in <strong>CI</strong> is reasonable endgame. Biggest risks: <strong>volume/IP</strong> behind Webb, and <strong>OF</strong> is mostly bargains (fine for $260 math after stars).</p>
+      <p style="margin:0" class="note"><strong>Pick scores (1–10)</strong> are subjective: value vs. typical NL-only auction prices, timing, and roster need. They are not projections.</p>
+    </section>
+
+    <section aria-labelledby="table-heading">
+      <h2 id="table-heading">Draft order, spend, and pick scores</h2>
+      <table aria-label="Full draft with grades">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Player</th>
+            <th>Pos</th>
+            <th>Team</th>
+            <th class="num">$</th>
+            <th class="score">Pick<br>score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Shohei Ohtani (H)</td><td>NP/P</td><td>LAD</td><td class="num">75</td><td class="score">8</td></tr>
+          <tr><td class="num">2</td><td>Logan Webb</td><td>P</td><td>SF</td><td class="num">35</td><td class="score">8</td></tr>
+          <tr><td class="num">3</td><td>Trea Turner</td><td>SS</td><td>PHI</td><td class="num">40</td><td class="score">7</td></tr>
+          <tr><td class="num">4</td><td>Rafael Devers</td><td>1B</td><td>BOS</td><td class="num">25</td><td class="score">10</td></tr>
+          <tr><td class="num">5</td><td>Alex Bregman</td><td>3B</td><td>CHC</td><td class="num">25</td><td class="score">8</td></tr>
+          <tr><td class="num">6</td><td>Will Smith</td><td>C</td><td>LAD</td><td class="num">20</td><td class="score">6</td></tr>
+          <tr><td class="num">7</td><td>Trevor McDonald</td><td>P</td><td>SF</td><td class="num">3</td><td class="score">8</td></tr>
+          <tr><td class="num">8</td><td>Brandon Lowe</td><td>2B</td><td>TB</td><td class="num">11</td><td class="score">9</td></tr>
+          <tr><td class="num">9</td><td>Justin Hagenman</td><td>P</td><td>NYM</td><td class="num">1</td><td class="score">7</td></tr>
+          <tr><td class="num">10</td><td>Lane Thomas</td><td>OF</td><td>WSH</td><td class="num">4</td><td class="score">8</td></tr>
+          <tr><td class="num">11</td><td>Trevor Richards</td><td>P</td><td>PHI</td><td class="num">1</td><td class="score">8</td></tr>
+          <tr><td class="num">12</td><td>Carl Edwards Jr.</td><td>MI</td><td>NYM</td><td class="num">1</td><td class="score">6</td></tr>
+          <tr><td class="num">13</td><td>Hayden Senger</td><td>C</td><td>NYM</td><td class="num">2</td><td class="score">10</td></tr>
+          <tr><td class="num">14</td><td>Logan Gillaspie</td><td>P</td><td>SD</td><td class="num">1</td><td class="score">7</td></tr>
+          <tr><td class="num">15</td><td>Willi Castro</td><td>P</td><td>COL</td><td class="num">1</td><td class="score">8</td></tr>
+          <tr><td class="num">16</td><td>DaShawn Keirsey Jr.</td><td>OF</td><td>ATL</td><td class="num">1</td><td class="score">7</td></tr>
+          <tr><td class="num">17</td><td>Walker Buehler</td><td>P</td><td>LAD</td><td class="num">1</td><td class="score">9</td></tr>
+          <tr><td class="num">18</td><td>Genesis Cabrera</td><td>P</td><td>PHI</td><td class="num">1</td><td class="score">7</td></tr>
+          <tr><td class="num">19</td><td>Chase Lowder</td><td>P</td><td>CIN</td><td class="num">2</td><td class="score">8</td></tr>
+          <tr><td class="num">20</td><td>Eli White</td><td>OF</td><td>ATL</td><td class="num">1</td><td class="score">6</td></tr>
+          <tr><td class="num">21</td><td>Michael Conforto</td><td>OF</td><td>SF</td><td class="num">1</td><td class="score">9</td></tr>
+          <tr><td class="num">22</td><td>Tyler Call</td><td>OF</td><td>LAD</td><td class="num">1</td><td class="score">7</td></tr>
+          <tr><td class="num">23</td><td>Connor Norby</td><td>CI</td><td>MIA</td><td class="num">7</td><td class="score">7</td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" style="font-weight:700">Total</td>
+            <td class="num" style="font-weight:700">260</td>
+            <td class="score" style="font-size:0.85rem">avg <strong>7.7</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+      <p class="note"><strong>Sheet note:</strong> Handwritten tag “Cabrera PHI” is interpreted as <strong>Genesis Cabrera</strong> (LHP); if your host card is a different Cabrera, rename in <a href="shatners.html">shatners.html</a>. <strong>Lane Thomas</strong> listed “AZ” on paper—WSH on MLB.</p>
+    </section>
+
+    <section aria-labelledby="roster-heading">
+      <h2 id="roster-heading">Final roster by slot (worksheet)</h2>
+      <table>
+        <thead>
+          <tr><th>Slot</th><th>Player</th><th class="num">$</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1B</td><td>Rafael Devers</td><td class="num">25</td></tr>
+          <tr><td>2B</td><td>Brandon Lowe</td><td class="num">11</td></tr>
+          <tr><td>SS</td><td>Trea Turner</td><td class="num">40</td></tr>
+          <tr><td>3B</td><td>Alex Bregman</td><td class="num">25</td></tr>
+          <tr><td>MI</td><td>Carl Edwards Jr.</td><td class="num">1</td></tr>
+          <tr><td>CI</td><td>Connor Norby</td><td class="num">7</td></tr>
+          <tr><td>C</td><td>Will Smith</td><td class="num">20</td></tr>
+          <tr><td>C</td><td>Hayden Senger</td><td class="num">2</td></tr>
+          <tr><td>OF</td><td>Lane Thomas</td><td class="num">4</td></tr>
+          <tr><td>OF</td><td>DaShawn Keirsey Jr.</td><td class="num">1</td></tr>
+          <tr><td>OF</td><td>Michael Conforto</td><td class="num">1</td></tr>
+          <tr><td>OF</td><td>Tyler Call</td><td class="num">1</td></tr>
+          <tr><td>OF</td><td>Eli White</td><td class="num">1</td></tr>
+          <tr><td>P</td><td>Logan Webb</td><td class="num">35</td></tr>
+          <tr><td>P</td><td>Trevor McDonald</td><td class="num">3</td></tr>
+          <tr><td>P</td><td>Justin Hagenman</td><td class="num">1</td></tr>
+          <tr><td>P</td><td>Trevor Richards</td><td class="num">1</td></tr>
+          <tr><td>P</td><td>Logan Gillaspie</td><td class="num">1</td></tr>
+          <tr><td>P</td><td>Willi Castro</td><td class="num">1</td></tr>
+          <tr><td>P</td><td>Walker Buehler</td><td class="num">1</td></tr>
+          <tr><td>P</td><td>Chase Lowder</td><td class="num">2</td></tr>
+          <tr><td>P</td><td>Genesis Cabrera</td><td class="num">1</td></tr>
+          <tr><td>NP/P</td><td>Shohei Ohtani (H)</td><td class="num">75</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Source worksheet</h2>
+      <figure>
+        <img src="assets/draft-final-shatners-2026.png" alt="Handwritten Shatners final draft sheet with capital column and draft order" width="1400" loading="lazy" decoding="async" />
+        <figcaption>Original final draft sheet (photo).</figcaption>
+      </figure>
+      <p class="note" style="margin-top:0.75rem">Working copies: <a href="shatners.html">shatners.html</a> · <a href="lightning-round.html">lightning-round.html</a></p>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shatner — NL auction (2026)</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --surface: #fffefb;
+      --text: #1c1917;
+      --muted: #57534e;
+      --accent: #0f766e;
+      --accent-soft: rgba(15, 118, 110, 0.12);
+      --border: #e7e5e0;
+      --shadow: 0 1px 2px rgba(28, 25, 23, 0.06), 0 4px 24px rgba(28, 25, 23, 0.06);
+      --radius: 12px;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem 1.25rem 3rem;
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 120% 80% at 50% -20%, rgba(15, 118, 110, 0.08), transparent);
+    }
+
+    .wrap {
+      max-width: 44rem;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      margin: 0 0 0.35rem;
+      font-size: clamp(1.5rem, 4vw, 1.85rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    header .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .budget-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      align-items: center;
+      margin-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .budget-bar dl {
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.75rem;
+    }
+
+    .budget-bar dt {
+      margin: 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .budget-bar dd {
+      margin: 0.15rem 0 0;
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .budget-bar .remain {
+      margin-left: auto;
+      padding: 0.5rem 1rem;
+      background: var(--accent-soft);
+      border-radius: 8px;
+      border: 1px solid rgba(15, 118, 110, 0.2);
+    }
+
+    .budget-bar .remain dt {
+      color: var(--accent);
+    }
+
+    .budget-bar .remain dd {
+      color: var(--accent);
+      font-size: 1.35rem;
+    }
+
+    section {
+      margin-bottom: 2rem;
+      padding: 1.35rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    section h2 {
+      margin: 0 0 1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      padding-bottom: 0.65rem;
+      border-bottom: 2px solid var(--accent-soft);
+    }
+
+    section h3 {
+      margin: 1.5rem 0 0.65rem;
+      font-size: 0.95rem;
+      font-weight: 650;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    section h3:first-of-type {
+      margin-top: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    li strong {
+      color: var(--text);
+    }
+
+    p {
+      margin: 0 0 0.85rem;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 0.5rem 0 0;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-size: 0.68rem;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      background: rgba(28, 25, 23, 0.03);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover td {
+      background: rgba(15, 118, 110, 0.04);
+    }
+
+    .num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pick {
+      font-weight: 600;
+    }
+
+    .filled td:nth-child(2) {
+      font-weight: 500;
+    }
+
+    .empty {
+      color: #a8a29e;
+    }
+
+    footer {
+      margin-top: 2rem;
+      padding: 1rem 0 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    section.appendix {
+      border-left: 4px solid rgba(120, 113, 108, 0.35);
+    }
+
+    section.appendix h2 {
+      border-bottom-color: rgba(120, 113, 108, 0.2);
+    }
+
+    .band {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Shatner — NL auction (2026)</h1>
+      <p class="sub">Draft worksheet · open in Chrome</p>
+      <div class="budget-bar" aria-label="Budget summary">
+        <dl>
+          <div>
+            <dt>Starting</dt>
+            <dd>$260</dd>
+          </div>
+          <div>
+            <dt>Spent</dt>
+            <dd>$260</dd>
+          </div>
+        </dl>
+        <dl class="remain">
+          <div>
+            <dt>Remaining</dt>
+            <dd>$0</dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+
+    <main>
+      <section aria-labelledby="strategy-heading">
+        <h2 id="strategy-heading">Strategy</h2>
+        <ul>
+          <li><strong>League:</strong> NL-only, $260 budget, roster matches the worksheet below (23 slots).</li>
+          <li><strong>Auction status:</strong> <strong>Complete</strong> — <strong>$260</strong> spent, <strong>$0</strong> left. Pick grades and narrative: <a href="Sidd Finch 2026 Draft.html">Sidd Finch 2026 Draft</a>. Final worksheet photo: <a href="assets/draft-final-shatners-2026.png">draft-final-shatners-2026.png</a>.</li>
+          <li><strong>Final roster (costs):</strong> <strong>Ohtani (H) $75</strong> NP/P; <strong>Webb $35</strong>; <strong>Turner $40</strong>; <strong>Devers $25</strong> 1B; <strong>Bregman $25</strong>; <strong>Smith $20</strong> / <strong>Senger $2</strong> C; <strong>Lowe $11</strong> 2B; <strong>Edwards Jr. $1</strong> MI; <strong>Norby $7</strong> CI; OF <strong>Thomas $4</strong>, <strong>Keirsey $1</strong>, <strong>Conforto $1</strong>, <strong>Call $1</strong>, <strong>White $1</strong>; P <strong>McDonald $3</strong>, then <strong>Hagenman, Richards, Gillaspie, Castro, Buehler, Cabrera (PHI)</strong> at <strong>$1</strong>, <strong>Lowder $2</strong>.</li>
+          <li><strong>House rule:</strong> once the high bid is <strong>$15+</strong>, raises are in <strong>$5</strong> steps ($20, $25, $30…).</li>
+          <li><strong>Post-draft:</strong> NP/P Ohtani is counted on the hitter side for this worksheet; monitor P innings and OF at-bats.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="priority-heading">
+        <h2 id="priority-heading">Draft complete</h2>
+        <p style="margin:0">All <strong>23</strong> slots are filled; budget is <strong>$0</strong>. Full <strong>draft order</strong>, dollars per pick, slot map, summary, and <strong>1–10 pick grades</strong>: <a href="Sidd Finch 2026 Draft.html"><strong>Sidd Finch 2026 Draft</strong></a>. The <a href="lightning-round.html">lightning-round</a> page is frozen as endgame reference.</p>
+      </section>
+
+      <section aria-labelledby="nom-heading">
+        <h2 id="nom-heading">Nomination order</h2>
+        <p>Dry-erase board order. Rotation is <strong>linear each round</strong> (1 → 10, then back to 1). You are <strong>4th every round</strong>.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th class="num">Pick</th>
+              <th>Team / manager</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">1</td><td>Injury Prone</td></tr>
+            <tr><td class="num">2</td><td>Protos</td></tr>
+            <tr><td class="num">3</td><td>Kings</td></tr>
+            <tr class="pick"><td class="num">4</td><td><strong>Shatner</strong></td></tr>
+            <tr><td class="num">5</td><td>Riga</td></tr>
+            <tr><td class="num">6</td><td>Owls</td></tr>
+            <tr><td class="num">7</td><td>UNTOUCHABLES</td></tr>
+            <tr><td class="num">8</td><td>Todd</td></tr>
+            <tr><td class="num">9</td><td>Sox</td></tr>
+            <tr><td class="num">10</td><td>ChudZ</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Log</h3>
+        <table>
+          <thead>
+            <tr>
+              <th class="num">Round</th>
+              <th class="num">Pick</th>
+              <th>Nominator</th>
+              <th>Player (nom)</th>
+              <th class="num">Open</th>
+              <th class="num">Final</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td class="num">4</td>
+              <td><strong>Shatner</strong></td>
+              <td>Juan Soto</td>
+              <td class="num">$3</td>
+              <td class="num"><strong>$35</strong></td>
+              <td><strong>Todd</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Paul Skenes (PIT)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$40</strong></td>
+              <td><strong>ChudZ</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Robert Suarez (SD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$20</strong></td>
+              <td><strong>Todd</strong> won. (P slot on sheet.)</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Trea Turner (PHI)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$40</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Fernando Tatís Jr. (SD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$30</strong></td>
+              <td><strong>ChudZ</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Kyle Schwarber (PHI)</td>
+              <td class="num">$20</td>
+              <td class="num"><strong>$30</strong></td>
+              <td><strong>Owls</strong> won. (Opened $20.)</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Rafael Devers (BOS)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$25</strong></td>
+              <td><strong>Shatner won.</strong> (1B/DH on host.) Final worksheet price.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Emilio Pagán (CIN)</td>
+              <td class="num">$10</td>
+              <td class="num"><strong>$15</strong></td>
+              <td><strong>Riga</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Hunter Goodman (COL)</td>
+              <td class="num">$5</td>
+              <td class="num"><strong>$25</strong></td>
+              <td><strong>ChudZ</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Edwin Díaz (LAD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$35</strong></td>
+              <td><strong>UNTOUCHABLES</strong> won. Shatner out at $30.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Alex Bregman (CHC)</td>
+              <td class="num">$15</td>
+              <td class="num"><strong>$25</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Spencer Strider (ATL)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$20</strong></td>
+              <td><strong>Owls</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Zac Gallen (ARI)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$20</strong></td>
+              <td><strong>Injury Prone</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Will Smith (LAD)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$20</strong></td>
+              <td><strong>Shatner won.</strong> Final worksheet price.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Merrill Kelly (ARI)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$13</strong></td>
+              <td><strong>Protos</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Eugenio Suarez (CIN)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$15</strong></td>
+              <td><strong>Kings</strong> won. (Sugar Kings.)</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>James Wood (WSH)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$20</strong></td>
+              <td><strong>ChudZ</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Andy Pages (LAD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$15</strong></td>
+              <td><strong>Kings</strong> won. (Sugar Kings.)</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Manny Machado (SD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$20</strong></td>
+              <td><strong>Owls</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Nick Pivetta (SD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$10</strong></td>
+              <td><strong>Injury Prone</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Trevor McDonald (SF)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$3</strong></td>
+              <td><strong>Shatner won.</strong> Final worksheet price.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Blake Snell (LAD)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$9</strong></td>
+              <td><strong>Protos</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Brandon Lowe (TB)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$11</strong></td>
+              <td><strong>Shatner won.</strong> Final worksheet price.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Justin Crawford (PHI)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$11</strong></td>
+              <td><strong>Injury Prone</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Justin Hagenman (NYM)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Mauricio Dubón (ATL)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Todd</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Ramón Laureano (MIL)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$8</strong></td>
+              <td><strong>Kings</strong> won. (Sugar Kings.)</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Lane Thomas (WSH)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$4</strong></td>
+              <td><strong>Shatner won.</strong> Final worksheet price.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Michael King (SD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$12</strong></td>
+              <td><strong>Kings</strong> won. (Sugar Kings.)</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Bobby Miller (LAD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$15</strong></td>
+              <td><strong>Sox</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Carlos Santana (PIT)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$5</strong></td>
+              <td><strong>Owls</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Bryson Stott (PHI)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$7</strong></td>
+              <td><strong>Protos</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Miguel Amaya (CHC)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$5</strong></td>
+              <td><strong>Protos</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Sal Stewart (CIN)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$11</strong></td>
+              <td><strong>Injury Prone</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Trevor Richards (PHI)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Jake O'Brien (CIN)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$5</strong></td>
+              <td><strong>Kings</strong> won. (Sugar Kings.)</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Ronny Henriquez (MIA)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$6</strong></td>
+              <td><strong>UNTOUCHABLES</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Bryan Reynolds (PIT)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$6</strong></td>
+              <td><strong>Owls</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Carl Edwards Jr. (NYM)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong> MI on final worksheet.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Hayden Senger (NYM)</td>
+              <td class="num">$2</td>
+              <td class="num"><strong>$2</strong></td>
+              <td><strong>Shatner won.</strong> Final worksheet price.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Luis García Jr. (WSH)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$11</strong></td>
+              <td><strong>Protos</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Alec Bohm (PHI)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$12</strong></td>
+              <td><strong>Todd</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>T.J. Rumfield (COL)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$8</strong></td>
+              <td><strong>Kings</strong> won. (Sugar Kings.)</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Logan Gillaspie (SD)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Tanner Scott (LAD)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$3</strong></td>
+              <td><strong>Todd</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Michael Harris II (ATL)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$7</strong></td>
+              <td><strong>Injury Prone</strong> won.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Willi Castro (COL)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong> P on final worksheet.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>DaShawn Keirsey Jr. (ATL)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong> Final worksheet price.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Walker Buehler (LAD)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Chase Lowder (CIN)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$2</strong></td>
+              <td><strong>Shatner won.</strong> Last P slot on pad.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Shohei Ohtani (H)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$75</strong></td>
+              <td><strong>Shatner won.</strong> NP/P; per final capital sheet (not every interim log row was captured).</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Logan Webb (SF)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$35</strong></td>
+              <td><strong>Shatner won.</strong> Final worksheet price.</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Genesis Cabrera (PHI)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong> Sheet “Cabrera PHI.”</td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Eli White (ATL)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Michael Conforto (SF)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Tyler Call (LAD)</td>
+              <td class="num">$1</td>
+              <td class="num"><strong>$1</strong></td>
+              <td><strong>Shatner won.</strong></td>
+            </tr>
+            <tr>
+              <td class="num">—</td>
+              <td class="num">—</td>
+              <td>—</td>
+              <td>Connor Norby (MIA)</td>
+              <td class="num">—</td>
+              <td class="num"><strong>$7</strong></td>
+              <td><strong>Shatner won.</strong> CI on final worksheet.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Shatner wins</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Team</th>
+              <th class="num">Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Shohei Ohtani (H)</td>
+              <td>LAD</td>
+              <td class="num">$75</td>
+            </tr>
+            <tr>
+              <td>Logan Webb</td>
+              <td>SF</td>
+              <td class="num">$35</td>
+            </tr>
+            <tr>
+              <td>Trea Turner</td>
+              <td>PHI</td>
+              <td class="num">$40</td>
+            </tr>
+            <tr>
+              <td>Rafael Devers</td>
+              <td>BOS</td>
+              <td class="num">$25</td>
+            </tr>
+            <tr>
+              <td>Alex Bregman</td>
+              <td>CHC</td>
+              <td class="num">$25</td>
+            </tr>
+            <tr>
+              <td>Will Smith</td>
+              <td>LAD</td>
+              <td class="num">$20</td>
+            </tr>
+            <tr>
+              <td>Trevor McDonald</td>
+              <td>SF</td>
+              <td class="num">$3</td>
+            </tr>
+            <tr>
+              <td>Brandon Lowe</td>
+              <td>TB</td>
+              <td class="num">$11</td>
+            </tr>
+            <tr>
+              <td>Justin Hagenman</td>
+              <td>NYM</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Lane Thomas</td>
+              <td>WSH</td>
+              <td class="num">$4</td>
+            </tr>
+            <tr>
+              <td>Trevor Richards</td>
+              <td>PHI</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Carl Edwards Jr.</td>
+              <td>NYM</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Hayden Senger</td>
+              <td>NYM</td>
+              <td class="num">$2</td>
+            </tr>
+            <tr>
+              <td>Logan Gillaspie</td>
+              <td>SD</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Willi Castro</td>
+              <td>COL</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>DaShawn Keirsey Jr.</td>
+              <td>ATL</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Walker Buehler</td>
+              <td>LAD</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Genesis Cabrera</td>
+              <td>PHI</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Chase Lowder</td>
+              <td>CIN</td>
+              <td class="num">$2</td>
+            </tr>
+            <tr>
+              <td>Eli White</td>
+              <td>ATL</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Michael Conforto</td>
+              <td>SF</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Tyler Call</td>
+              <td>LAD</td>
+              <td class="num">$1</td>
+            </tr>
+            <tr>
+              <td>Connor Norby</td>
+              <td>MIA</td>
+              <td class="num">$7</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top:0.5rem"><strong>Total $260</strong> — order above matches the handwritten <strong>capital / cost</strong> column on the final sheet. <strong>Cabrera PHI</strong> listed as <strong>Genesis Cabrera</strong>; rename if your host uses a different Phillies Cabrera.</p>
+
+        <h3 id="ownership-heading">League ownership</h3>
+        <p>Compiled from your <strong>worksheet photos</strong> (team headers on paper) plus <strong>auction results</strong> where the winner is known. Sort is <strong>draft order</strong>. Fill in TBD rows when you see who bought them.</p>
+        <table aria-labelledby="ownership-heading">
+          <thead>
+            <tr>
+              <th>Owner</th>
+              <th>Player</th>
+              <th>Slot (paper)</th>
+              <th class="num">$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Injury Prone</td><td>Bryce Harper</td><td>1B</td><td class="num">20</td></tr>
+            <tr><td>Injury Prone</td><td>Mookie Betts</td><td>SS</td><td class="num">25</td></tr>
+            <tr><td>Injury Prone</td><td>Baldwin</td><td>C</td><td class="num">25</td></tr>
+            <tr><td>Injury Prone</td><td>Zac Gallen</td><td>P</td><td class="num">20</td></tr>
+            <tr><td>Injury Prone</td><td>Shota Imanaga</td><td>P</td><td class="num">11</td></tr>
+            <tr><td>Injury Prone</td><td>Nick Pivetta</td><td>P</td><td class="num">10</td></tr>
+            <tr><td>Injury Prone</td><td>Justin Crawford</td><td>OF</td><td class="num">11</td></tr>
+            <tr><td>Injury Prone</td><td>Sal Stewart</td><td>3B</td><td class="num">11</td></tr>
+            <tr><td>Injury Prone</td><td>Michael Harris II</td><td>OF</td><td class="num">7</td></tr>
+            <tr><td>Protos</td><td>Xander Bogaerts</td><td>SS</td><td class="num">15</td></tr>
+            <tr><td>Protos</td><td>Pete Crow-Armstrong</td><td>OF</td><td class="num">25</td></tr>
+            <tr><td>Protos</td><td>Owen Caissie</td><td>OF</td><td class="num">15</td></tr>
+            <tr><td>Protos</td><td>Grant McLean</td><td>P</td><td class="num">20</td></tr>
+            <tr><td>Protos</td><td>Daniel Palencia</td><td>P</td><td class="num">20</td></tr>
+            <tr><td>Protos</td><td>Merrill Kelly</td><td>P</td><td class="num">13</td></tr>
+            <tr><td>Protos</td><td>Blake Snell</td><td>P</td><td class="num">9</td></tr>
+            <tr><td>Protos</td><td>Bryson Stott</td><td>2B</td><td class="num">7</td></tr>
+            <tr><td>Protos</td><td>Miguel Amaya</td><td>C</td><td class="num">5</td></tr>
+            <tr><td>Protos</td><td>Luis García Jr.</td><td>MI</td><td class="num">11</td></tr>
+            <tr><td>Kings</td><td>Griffin</td><td>SS</td><td class="num">15</td></tr>
+            <tr><td>Kings</td><td>Teoscar Hernández</td><td>OF</td><td class="num">15</td></tr>
+            <tr><td>Kings</td><td>Geraldo Perdomo</td><td>MI</td><td class="num">20</td></tr>
+            <tr><td>Kings</td><td>Sandy Alcantara</td><td>P</td><td class="num">20</td></tr>
+            <tr><td>Kings</td><td>Eugenio Suarez</td><td>3B</td><td class="num">15</td></tr>
+            <tr><td>Kings</td><td>Andy Pages</td><td>OF</td><td class="num">15</td></tr>
+            <tr><td>Kings</td><td>Ramón Laureano</td><td>OF</td><td class="num">8</td></tr>
+            <tr><td>Kings</td><td>Michael King</td><td>P</td><td class="num">12</td></tr>
+            <tr><td>Kings</td><td>Jake O'Brien</td><td>P</td><td class="num">5</td></tr>
+            <tr><td>Kings</td><td>T.J. Rumfield</td><td>1B</td><td class="num">8</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Shohei Ohtani (H)</td><td>NP/P</td><td class="num">75</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Logan Webb</td><td>P</td><td class="num">35</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Trea Turner</td><td>SS</td><td class="num">40</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Rafael Devers</td><td>1B</td><td class="num">25</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Alex Bregman</td><td>3B</td><td class="num">25</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Will Smith</td><td>C</td><td class="num">20</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Trevor McDonald</td><td>P</td><td class="num">3</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Brandon Lowe</td><td>2B</td><td class="num">11</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Justin Hagenman</td><td>P</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Lane Thomas</td><td>OF</td><td class="num">4</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Trevor Richards</td><td>P</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Carl Edwards Jr.</td><td>MI</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Hayden Senger</td><td>C</td><td class="num">2</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Logan Gillaspie</td><td>P</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Willi Castro</td><td>P</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>DaShawn Keirsey Jr.</td><td>OF</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Walker Buehler</td><td>P</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Genesis Cabrera</td><td>P</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Chase Lowder</td><td>P</td><td class="num">2</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Eli White</td><td>OF</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Michael Conforto</td><td>OF</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Tyler Call</td><td>OF</td><td class="num">1</td></tr>
+            <tr><td><strong>Shatner</strong></td><td>Connor Norby</td><td>CI</td><td class="num">7</td></tr>
+            <tr><td>Riga</td><td>Freddie Freeman</td><td>1B</td><td class="num">30</td></tr>
+            <tr><td>Riga</td><td>Robbie Ray</td><td>P</td><td class="num">20</td></tr>
+            <tr><td>Riga</td><td>Roberts</td><td>OF</td><td class="num">15</td></tr>
+            <tr><td>Riga</td><td>Emilio Pagán</td><td>P</td><td class="num">15</td></tr>
+            <tr><td>Riga</td><td>Jacob Misiorowski</td><td>P</td><td class="num">25</td></tr>
+            <tr><td>Riga</td><td>Willy Adames</td><td>SS</td><td class="num">15</td></tr>
+            <tr><td>Riga</td><td>Freddy Peralta</td><td>P</td><td class="num">15</td></tr>
+            <tr><td>Owls</td><td>Ronald Acuña Jr.</td><td>OF</td><td class="num">40</td></tr>
+            <tr><td>Owls</td><td>Elly De La Cruz</td><td>SS</td><td class="num">35</td></tr>
+            <tr><td>Owls</td><td>Kyle Schwarber</td><td>NP/P</td><td class="num">30</td></tr>
+            <tr><td>Owls</td><td>Francisco Lindor</td><td>MI</td><td class="num">30</td></tr>
+            <tr><td>Owls</td><td>Spencer Strider</td><td>P</td><td class="num">20</td></tr>
+            <tr><td>Owls</td><td>Hayden Roupp</td><td>P</td><td class="num">13</td></tr>
+            <tr><td>Owls</td><td>Christian Yelich</td><td>OF</td><td class="num">20</td></tr>
+            <tr><td>Owls</td><td>Corbin Burnes</td><td>P</td><td class="num">7</td></tr>
+            <tr><td>Owls</td><td>Mark Vientos</td><td>1B</td><td class="num">15</td></tr>
+            <tr><td>Owls</td><td>Manny Machado</td><td>3B</td><td class="num">20</td></tr>
+            <tr><td>Owls</td><td>Carlos Santana</td><td>CI</td><td class="num">5</td></tr>
+            <tr><td>Owls</td><td>Bryan Reynolds</td><td>OF</td><td class="num">6</td></tr>
+            <tr><td>UNTOUCHABLES</td><td>William Contreras</td><td>C</td><td class="num">25</td></tr>
+            <tr><td>UNTOUCHABLES</td><td>Matt Chapman</td><td>3B</td><td class="num">20</td></tr>
+            <tr><td>UNTOUCHABLES</td><td>Edwin Díaz</td><td>P</td><td class="num">35</td></tr>
+            <tr><td>UNTOUCHABLES</td><td>Chris Sale</td><td>P</td><td class="num">25</td></tr>
+            <tr><td>UNTOUCHABLES</td><td>Spencer Steer</td><td>1B</td><td class="num">15</td></tr>
+            <tr><td>UNTOUCHABLES</td><td>Brett Baty</td><td>2B</td><td class="num">14</td></tr>
+            <tr><td>UNTOUCHABLES</td><td>Ronny Henriquez</td><td>P</td><td class="num">6</td></tr>
+            <tr><td>Todd</td><td>Juan Soto</td><td>C</td><td class="num">35</td></tr>
+            <tr><td>Todd</td><td>Patrick Bailey</td><td>C</td><td class="num">11</td></tr>
+            <tr><td>Todd</td><td>Suarez</td><td>2B</td><td class="num">20</td></tr>
+            <tr><td>Todd</td><td>Nico Hoerner</td><td>MI</td><td class="num">25</td></tr>
+            <tr><td>Todd</td><td>Jesús Luzardo</td><td>P</td><td class="num">25</td></tr>
+            <tr><td>Todd</td><td>Shohei Ohtani (P)</td><td>P</td><td class="num">25</td></tr>
+            <tr><td>Todd</td><td>R. Suarez</td><td>P <span class="note" style="font-style:normal">(sheet: “ATL”)</span></td><td class="num">20</td></tr>
+            <tr><td>Todd</td><td>Mauricio Dubón</td><td>SS</td><td class="num">1</td></tr>
+            <tr><td>Todd</td><td>Alec Bohm</td><td>3B</td><td class="num">12</td></tr>
+            <tr><td>Todd</td><td>Tanner Scott</td><td>P</td><td class="num">3</td></tr>
+            <tr><td>Sox</td><td>Michael Busch</td><td>1B</td><td class="num">20</td></tr>
+            <tr><td>Sox</td><td>Ketel Marte</td><td>2B</td><td class="num">30</td></tr>
+            <tr><td>Sox</td><td>Dansby Swanson</td><td>SS</td><td class="num">25</td></tr>
+            <tr><td>Sox</td><td>Max Muncy</td><td>3B</td><td class="num">20</td></tr>
+            <tr><td>Sox</td><td>CJ Abrams</td><td>MI</td><td class="num">20</td></tr>
+            <tr><td>Sox</td><td>Matt Olson</td><td>CI</td><td class="num">20</td></tr>
+            <tr><td>Sox</td><td>—</td><td>C</td><td class="num">15</td></tr>
+            <tr><td>Sox</td><td>—</td><td>C</td><td class="num">25</td></tr>
+            <tr><td>Sox</td><td>Kyle Tucker</td><td>OF</td><td class="num">13</td></tr>
+            <tr><td>Sox</td><td>Yoshinobu Yamamoto</td><td>P</td><td class="num">25</td></tr>
+            <tr><td>Sox</td><td>Tyler Glasnow</td><td>P</td><td class="num">20</td></tr>
+            <tr><td>Sox</td><td>Bobby Miller</td><td>P</td><td class="num">15</td></tr>
+            <tr><td>ChudZ</td><td>Paul Skenes</td><td>P</td><td class="num">40</td></tr>
+            <tr><td>ChudZ</td><td>Fernando Tatís Jr.</td><td>OF</td><td class="num">30</td></tr>
+            <tr><td>ChudZ</td><td>Jackson Chourio</td><td>OF</td><td class="num">35</td></tr>
+            <tr><td>ChudZ</td><td>Hunter Goodman</td><td>C</td><td class="num">25</td></tr>
+            <tr><td>ChudZ</td><td>Brice Turang</td><td>2B</td><td class="num">25</td></tr>
+            <tr><td>ChudZ</td><td>Otto Lopez</td><td>SS</td><td class="num">15</td></tr>
+            <tr><td>ChudZ</td><td>Heliot Ramos</td><td>OF</td><td class="num">13</td></tr>
+            <tr><td>ChudZ</td><td>James Wood</td><td>OF</td><td class="num">20</td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:1.25rem" id="budgets-heading">League budgets (documented)</h3>
+        <p class="note" style="margin-bottom:0.5rem">Each team starts at <strong>$260</strong>. <strong>Spent</strong> = sum of rows in the ownership table above for that owner. <strong>Remaining</strong> = 260 − spent. <strong>Shatner</strong> is fully reconciled to the <strong>final worksheet</strong> (<strong>$260</strong>).</p>
+        <table aria-labelledby="budgets-heading">
+          <thead>
+            <tr>
+              <th class="num">#</th>
+              <th>Team</th>
+              <th class="num">Spent</th>
+              <th class="num">Remaining</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">1</td><td>Injury Prone</td><td class="num">$140</td><td class="num"><strong>$120</strong></td></tr>
+            <tr><td class="num">2</td><td>Protos</td><td class="num">$140</td><td class="num">$120</td></tr>
+            <tr><td class="num">3</td><td>Kings</td><td class="num">$133</td><td class="num">$127</td></tr>
+            <tr class="pick"><td class="num">4</td><td><strong>Shatner</strong></td><td class="num">$260</td><td class="num"><strong>$0</strong></td></tr>
+            <tr><td class="num">5</td><td>Riga</td><td class="num">$135</td><td class="num">$125</td></tr>
+            <tr><td class="num">6</td><td>Owls</td><td class="num">$241</td><td class="num">$19</td></tr>
+            <tr><td class="num">7</td><td>UNTOUCHABLES</td><td class="num">$140</td><td class="num">$120</td></tr>
+            <tr><td class="num">8</td><td>Todd</td><td class="num">$177</td><td class="num">$83</td></tr>
+            <tr><td class="num">9</td><td>Sox</td><td class="num">$248</td><td class="num">$12</td></tr>
+            <tr><td class="num">10</td><td>ChudZ</td><td class="num">$198</td><td class="num">$62</td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top:0.75rem"><strong>Worksheet photo sync (parts 1–2):</strong> <strong>Injury Prone</strong> sheet adds Harper, Betts, Imanaga; <strong>Kings</strong> adds Hernández (LAD), Perdomo, Alcantara, <strong>Laureano</strong>, <strong>Michael King</strong> (auction); <strong>Riga</strong> full roster (Freeman through Peralta)—<strong>Roberts</strong> OF <strong>$15</strong> per handwriting (verify full name); <strong>Owls</strong> full ten-player sheet; <strong>ChudZ</strong> Skenes/Tatís/Chourio/Goodman/Turang/Lopez/Ramos/Wood. <strong>Sox</strong> adds auction <strong>Bobby Miller (P) $15</strong>; still has two unnamed <strong>C</strong> rows. <strong>Corbin Carroll</strong> on ChudZ slot in photo but no $ in log—add when priced.</p>
+
+        <p class="note" style="margin-top:0.75rem"><strong>Todd “Suarez” (2B):</strong> as written on the sheet—verify full name (NL MI). <strong>R. Suarez (P) $20</strong> is treated as the same player as auction <strong>Robert Suarez (SD) $20</strong>; if your sheet price differs, update both places.</p>
+
+        <h3 style="margin-top:1.25rem">Sold — owner not on sheets yet</h3>
+        <p class="note" style="margin-bottom:0.5rem">From the running auction log; add owner when you know it.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th class="num">Final $</th>
+              <th>Owner (TBD)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="3" class="note" style="font-style:italic">No pending rows—Skenes, Tatís, Schwarber, Pagán, Goodman (and related log sales) are on <strong>ChudZ</strong>, <strong>Owls</strong>, or <strong>Riga</strong> in the ownership table.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Next nomination</h3>
+        <p><strong>Auction finished</strong> for Shatner at <strong>$260</strong>. Season-long: <a href="Sidd Finch 2026 Draft.html">draft review + grades</a>.</p>
+
+        <h3 style="margin-top:1.25rem" id="live-board-heading">Live auction board (photo)</h3>
+        <p class="note" style="margin-bottom:0.5rem">Snapshot <strong>2026-04-04</strong>: any name <strong>without</strong> a red strike-through is still in the pool. For draftable players, rely on the <strong>NL team</strong> columns; the large by-position sheets may include names outside NL-only if the host prints that way.</p>
+        <figure style="margin:0">
+          <img src="assets/nl-auction-board.png" alt="NL auction draft board: printed team and position lists; red lines mark sold players" width="1600" loading="lazy" decoding="async" style="max-width:100%;height:auto;border:1px solid rgba(15,118,110,0.2);border-radius:6px" />
+          <figcaption class="note" style="margin-top:0.5rem">Reference only—if the room board or host site disagrees, treat those as source of truth.</figcaption>
+        </figure>
+      </section>
+
+      <section aria-labelledby="roster-heading">
+        <h2 id="roster-heading">Worksheet roster</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Slot</th>
+              <th>Player</th>
+              <th class="num">Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="filled"><td>1B</td><td>Rafael Devers</td><td class="num">$25</td></tr>
+            <tr class="filled"><td>2B</td><td>Brandon Lowe</td><td class="num">$11</td></tr>
+            <tr class="filled"><td>SS</td><td>Trea Turner</td><td class="num">$40</td></tr>
+            <tr class="filled"><td>3B</td><td>Alex Bregman</td><td class="num">$25</td></tr>
+            <tr class="filled"><td>MI</td><td>Carl Edwards Jr.</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>CI</td><td>Connor Norby</td><td class="num">$7</td></tr>
+            <tr class="filled"><td>C</td><td>Will Smith</td><td class="num">$20</td></tr>
+            <tr class="filled"><td>C</td><td>Hayden Senger</td><td class="num">$2</td></tr>
+            <tr class="filled"><td>OF</td><td>Lane Thomas</td><td class="num">$4</td></tr>
+            <tr class="filled"><td>OF</td><td>DaShawn Keirsey Jr.</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>OF</td><td>Michael Conforto</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>OF</td><td>Tyler Call</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>OF</td><td>Eli White</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>P</td><td>Logan Webb</td><td class="num">$35</td></tr>
+            <tr class="filled"><td>P</td><td>Trevor McDonald</td><td class="num">$3</td></tr>
+            <tr class="filled"><td>P</td><td>Justin Hagenman</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>P</td><td>Trevor Richards</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>P</td><td>Logan Gillaspie</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>P</td><td>Willi Castro</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>P</td><td>Walker Buehler</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>P</td><td>Chase Lowder</td><td class="num">$2</td></tr>
+            <tr class="filled"><td>P</td><td>Genesis Cabrera</td><td class="num">$1</td></tr>
+            <tr class="filled"><td>NP/P</td><td>Shohei Ohtani (H)</td><td class="num">$75</td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top:1rem"><strong>Final sheet (Apr 2026):</strong> <strong>$260</strong> spent; <strong>Willi Castro</strong> is a <strong>P</strong> row on paper. <strong>Cabrera PHI</strong> → <strong>Genesis Cabrera</strong> unless your host card differs. Earlier snapshot: <a href="assets/roster-shatners-2026.png">roster-shatners-2026.png</a> · <a href="assets/draft-final-shatners-2026.png">draft-final-shatners-2026.png</a>.</p>
+        <figure style="margin:1rem 0 0">
+          <img src="assets/draft-final-shatners-2026.png" alt="Final handwritten Shatners draft sheet with capital and draft order" width="1400" loading="lazy" decoding="async" style="max-width:100%;height:auto;border:1px solid var(--border);border-radius:6px" />
+          <figcaption class="note" style="margin-top:0.5rem">Final worksheet (authoritative for dollars and slots).</figcaption>
+        </figure>
+        <figure style="margin:1rem 0 0">
+          <img src="assets/roster-shatners-2026.png" alt="Earlier handwritten Shatners roster and budget scratch pad" width="1200" loading="lazy" decoding="async" style="max-width:100%;height:auto;border:1px solid var(--border);border-radius:6px" />
+          <figcaption class="note" style="margin-top:0.5rem">Earlier mid-draft snapshot (reference only).</figcaption>
+        </figure>
+      </section>
+
+      <section class="appendix" aria-labelledby="burn-heading">
+        <h2 id="burn-heading">Burn nominations (other people spend; you don’t)</h2>
+        <p>Only use when you are <strong>truly out</strong> at any realistic price—otherwise you can get stuck winning your own nom. Goal: pull <strong>budget off the table</strong> on stars or thin tiers (SP1, CI, C, SV).</p>
+        <p><strong>Bidding rule reminder:</strong> at <strong>$15+</strong>, the room uses <strong>$5</strong> increments. Openers at <strong>$3–5</strong> still work to skip penny poker; for players who will clear <strong>$20+</strong> anyway, some nominators open at <strong>$20</strong> (see Schwarber)—match your open to what forces serious bids without gifting a discount.</p>
+
+        <h3 style="margin-top:1rem">Clearing prices (league, not Shatner)</h3>
+        <p class="note" style="margin-bottom:0.5rem">Comps for opens and walk points.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th class="num">Final</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Juan Soto</td><td class="num">$35</td></tr>
+            <tr><td>Paul Skenes (PIT)</td><td class="num">$40</td></tr>
+            <tr><td>Robert Suarez (SD)</td><td class="num">$20</td></tr>
+            <tr><td>Fernando Tatís Jr. (SD)</td><td class="num">$30</td></tr>
+            <tr><td>Kyle Schwarber (PHI)</td><td class="num">$30</td></tr>
+            <tr><td>Rafael Devers (BOS)</td><td class="num">$25</td></tr>
+            <tr><td>Emilio Pagán (CIN)</td><td class="num">$15</td></tr>
+            <tr><td>Hunter Goodman (COL)</td><td class="num">$25</td></tr>
+            <tr><td>Edwin Díaz (LAD)</td><td class="num">$35</td></tr>
+            <tr><td>Spencer Strider (ATL)</td><td class="num">$20</td></tr>
+            <tr><td>Zac Gallen (ARI)</td><td class="num">$20</td></tr>
+            <tr><td>Merrill Kelly (ARI)</td><td class="num">$13</td></tr>
+            <tr><td>Eugenio Suarez (CIN)</td><td class="num">$15</td></tr>
+            <tr><td>James Wood (WSH)</td><td class="num">$20</td></tr>
+            <tr><td>Andy Pages (LAD)</td><td class="num">$15</td></tr>
+            <tr><td>Manny Machado (SD)</td><td class="num">$20</td></tr>
+            <tr><td>Nick Pivetta (SD)</td><td class="num">$10</td></tr>
+            <tr><td>Blake Snell (LAD)</td><td class="num">$9</td></tr>
+            <tr><td>Brandon Lowe (TB)</td><td class="num">$11</td></tr>
+            <tr><td>Justin Crawford (PHI)</td><td class="num">$11</td></tr>
+            <tr><td>Justin Hagenman (NYM)</td><td class="num">$1</td></tr>
+            <tr><td>Mauricio Dubón (ATL)</td><td class="num">$1</td></tr>
+            <tr><td>Ramón Laureano (MIL)</td><td class="num">$8</td></tr>
+            <tr><td>Lane Thomas (WSH)</td><td class="num">$4</td></tr>
+            <tr><td>Michael King (SD)</td><td class="num">$12</td></tr>
+            <tr><td>Bobby Miller (LAD)</td><td class="num">$15</td></tr>
+            <tr><td>Tyler Glasnow (LAD)</td><td class="num">$20</td></tr>
+            <tr><td>Carlos Santana (PIT)</td><td class="num">$5</td></tr>
+            <tr><td>Bryson Stott (PHI)</td><td class="num">$7</td></tr>
+            <tr><td>Miguel Amaya (CHC)</td><td class="num">$5</td></tr>
+            <tr><td>Sal Stewart (CIN)</td><td class="num">$11</td></tr>
+            <tr><td>Trevor Richards (PHI)</td><td class="num">$1</td></tr>
+            <tr><td>Jake O'Brien (CIN)</td><td class="num">$5</td></tr>
+            <tr><td>Ronny Henriquez (MIA)</td><td class="num">$6</td></tr>
+            <tr><td>Bryan Reynolds (PIT)</td><td class="num">$6</td></tr>
+            <tr><td>Carl Edwards Jr. (NYM)</td><td class="num">$1</td></tr>
+            <tr><td>Hayden Senger (NYM)</td><td class="num">$2</td></tr>
+            <tr><td>Luis García Jr. (WSH)</td><td class="num">$11</td></tr>
+            <tr><td>Alec Bohm (PHI)</td><td class="num">$12</td></tr>
+            <tr><td>T.J. Rumfield (COL)</td><td class="num">$8</td></tr>
+            <tr><td>Logan Gillaspie (SD)</td><td class="num">$1</td></tr>
+            <tr><td>Tanner Scott (LAD)</td><td class="num">$3</td></tr>
+            <tr><td>Michael Harris II (ATL)</td><td class="num">$7</td></tr>
+            <tr><td>Willi Castro (COL)</td><td class="num">$1</td></tr>
+            <tr><td>DaShawn Keirsey Jr. (ATL)</td><td class="num">$1</td></tr>
+            <tr><td>Walker Buehler (LAD)</td><td class="num">$1</td></tr>
+            <tr><td>Chase Lowder (CIN)</td><td class="num">$2</td></tr>
+            <tr><td>Shohei Ohtani (H)</td><td class="num">$75</td></tr>
+            <tr><td>Logan Webb (SF)</td><td class="num">$35</td></tr>
+            <tr><td>Will Smith (LAD)</td><td class="num">$20</td></tr>
+            <tr><td>Trevor McDonald (SF)</td><td class="num">$3</td></tr>
+            <tr><td>Genesis Cabrera (PHI)</td><td class="num">$1</td></tr>
+            <tr><td>Michael Conforto (SF)</td><td class="num">$1</td></tr>
+            <tr><td>Tyler Call (LAD)</td><td class="num">$1</td></tr>
+            <tr><td>Eli White (ATL)</td><td class="num">$1</td></tr>
+            <tr><td>Connor Norby (MIA)</td><td class="num">$7</td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:1.25rem">Still-good burn targets (NL)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Player (NL)</th>
+              <th class="num">Open</th>
+              <th>Why it burns cash</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Corbin Burnes</strong> (ARI)</td>
+              <td class="num band">$3</td>
+              <td>Ace-tier SP nom; <strong>Glasnow $20</strong> (Sox) and <strong>Strider $20</strong> (Owls) already gone.</td>
+            </tr>
+            <tr>
+              <td><strong>Ronald Acuña Jr.</strong> (ATL)</td>
+              <td class="num band">$5</td>
+              <td>Elite OF; Tatís cleared <strong>$30</strong>—Acuña/Betts types move the most cash.</td>
+            </tr>
+            <tr>
+              <td><strong>Mookie Betts</strong> (LAD)</td>
+              <td class="num band">$5</td>
+              <td>Multi-positional star; two managers often bid each other up.</td>
+            </tr>
+            <tr>
+              <td><strong>Freddie Freeman</strong> (LAD)</td>
+              <td class="num band">$5</td>
+              <td>Safe CI; room pays for floor.</td>
+            </tr>
+            <tr>
+              <td><strong>Matt Olson</strong> (ATL)</td>
+              <td class="num band">$5</td>
+              <td>CI power alternative now that Schwarber is off the board at <strong>$30</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>Pete Alonso</strong> (NYM)</td>
+              <td class="num band">$5</td>
+              <td>Pure HR gravity; CI-needy teams bite.</td>
+            </tr>
+            <tr>
+              <td><strong>Bryce Harper</strong> (PHI)</td>
+              <td class="num band">$5</td>
+              <td>Big bat; fine as a burn if you’re out on Harper (Turner already on roster).</td>
+            </tr>
+            <tr>
+              <td><strong>William Contreras</strong> (MIL)</td>
+              <td class="num band">$3</td>
+              <td>Thin C tier; forces catcher budget spend.</td>
+            </tr>
+            <tr>
+              <td><strong>Raisel Iglesias</strong> (ATL) / <strong>Ryan Helsley</strong> (STL) / <strong>Kyle Finnegan</strong> (WSH)</td>
+              <td class="num band">$2–3</td>
+              <td>SV burns; <strong>Díaz (LAD) gone $35</strong>, <strong>Suarez $20</strong>, <strong>Pagán $15</strong>—adjust expectations down-tier.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top:1rem"><strong>Off the board for burns:</strong> <strong>Soto, Skenes, Robert Suarez (SD), Eugenio Suarez (CIN), Tatís, Schwarber, Devers (BOS), Pagán, Goodman, Díaz (LAD), Strider (ATL), Gallen (ARI), Merrill Kelly (ARI), James Wood (WSH), Andy Pages (LAD), Machado (SD), Pivetta (SD), Snell (LAD), Crawford (PHI), Dubón (ATL), Laureano (MIL), Lane Thomas (WSH), Michael King (SD), Bobby Miller (LAD), Glasnow (LAD), Carlos Santana (PIT), Bryson Stott (PHI), Miguel Amaya (CHC), Sal Stewart (CIN), Luis García Jr. (WSH), Alec Bohm (PHI), T.J. Rumfield (COL), Trevor Richards (PHI), Carl Edwards Jr. (NYM), Hayden Senger (NYM), Logan Gillaspie (SD), Tanner Scott (LAD), Michael Harris II (ATL), Willi Castro (COL), DaShawn Keirsey Jr. (ATL), Walker Buehler (LAD), Chase Lowder (CIN), Jake O'Brien (CIN), Ronny Henriquez (MIA), Bryan Reynolds (PIT)</strong>—already sold (<strong>Glasnow</strong> to <strong>Sox</strong> <strong>$20</strong>). <strong>Ohtani (H), Webb, Turner, Devers, Bregman, Smith, McDonald, Lowe, Hagenman, Thomas, Richards, Edwards Jr., Senger, Gillaspie, Castro, Keirsey Jr., Buehler, Cabrera (PHI), Lowder, White, Conforto, Call, Norby</strong> on Shatner; don’t burn your own guys.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Roster is <strong>full</strong> at <strong>$260</strong>. For pick grades and narrative see <a href="Sidd Finch 2026 Draft.html">Sidd Finch 2026 Draft</a>.</p>
+    </footer>
+  </div>
+</body>
+</html>
