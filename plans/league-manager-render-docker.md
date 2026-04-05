@@ -23,7 +23,7 @@
 | --- | --- |
 | **0 — Scaffold** | Repo layout, `Dockerfile`, health endpoint, `PORT` binding, local `docker compose` optional. |
 | **1 — Deploy** | Git-connected **Render** deploy from Dockerfile; secrets via Render **environment**; smoke test URL. |
-| **2 — Auth (managers)** | **Every manager** can have an account: register/login (or **invite-only**), **session cookies** or **JWT**, passwords hashed (**bcrypt** / **argon2**). Each account is linked to exactly one **league team** (enforced or admin-assigned). No shared “league password.” |
+| **2 — Auth (managers)** | **Invite-only:** no public registration. Commish (or delegate) **issues invites** (one-time token or magic link) per **league team**; manager **claims** invite, sets password, then uses **session cookies** or **JWT**. Passwords hashed (**bcrypt** / **argon2**). Each account is bound to **exactly one** team at invite creation. No shared “league password.” |
 | **3 — Data model** | Versioned **league snapshot** and all private artifacts scoped by **`user_id` / `team_profile_id`** (required on write). League-wide **read** data (e.g. full standings) can be stored once per snapshot **version** with shared read access rules, or duplicated per tenant—pick one approach and document invariants. |
 | **4 — Ingest v1** | **Manual import** (paste JSON/CSV or upload) **per logged-in manager** so the app works **without** Rotowire login. |
 | **5 — Brain v1** | Rule-based **recommendations** from snapshot + `2026-rules.md` categories (offense: AVG, R, RBI, SB, TB+BB+HBP; pitching: W, SV, K, ERA, QS). |
@@ -35,8 +35,9 @@
 ## Users and authentication (strategy)
 
 - **Who signs in:** **League managers only** (you + other owners). **Not** the secretary.
-- **Accounts:** `email`, `password_hash`, `display_name`; optional **OAuth** (Google/GitHub) later—still map to **`user_id`** and **team**.
-- **Team binding:** One **team profile** per manager (e.g. “Shatners”). Admins or **invite tokens** assign `team_profile_id` so managers cannot claim each other’s team.
+- **Invite-only onboarding:** There is **no** self-service “create account” without a valid **invite**. Invites are **minted by an admin** (or seeded for dev) and encode (or reference) the **`team_profile_id`** so the manager cannot pick another team.
+- **Accounts:** `email`, `password_hash`, `display_name`; optional **OAuth** later only if it still flows through **invite binding** (e.g. link Google after invite)—never orphan OAuth sign-up.
+- **Team binding:** One **team profile** per manager, fixed at **invite acceptance**; no open team picker.
 - **Authorization:** All **private** rows (imports, notes, FA targets, email drafts, per-team snapshot copies) require **`user_id`** match (or role-based admin for league-wide ops).
 - **League-wide visibility:** Define explicitly what **all** managers may see (e.g. aggregate standings) vs **owner-only** (bids, watchlists). Prefer **one** policy module so rules don’t sprawl (Ousterhout: general mechanism).
 - **Local dev:** Use a **seed script** with 2–3 test accounts representing different teams; production uses real manager emails.
@@ -132,9 +133,9 @@ plans/                 # this document
 ## Security notes
 
 - **Rotowire credentials** (if ever used): env vars only; never commit; rotate if logs leak.
-- **Rate limiting** on auth and import endpoints; **account enumeration** resistance on login/register.
+- **Rate limiting** on auth and import endpoints; **account enumeration** resistance on **login** and **invite redemption** (generic errors, no “email not found” vs “wrong password” distinction).
 - Prefer **read-only** automation; align with Rotowire **terms of use**.
-- **Managers:** Never store plaintext passwords; **HTTPS** on Render (default); **invite-only** or **email verification** recommended so random signups cannot claim a team.
+- **Managers:** Never store plaintext passwords; **HTTPS** on Render (default); **invite-only** is **required**—no public registration endpoint in production.
 
 ---
 
@@ -220,6 +221,7 @@ flowchart LR
 - **Render:** Auto-deploy on push; `/health` returns 200; no hard-coded secrets.
 - **Product:** With a **mock or pasted** league snapshot, the UI or API returns at least one **actionable recommendation** (e.g. weakest category vs league median).
 - **Multi-manager:** **Two or more** test accounts can log in concurrently; each sees **only** their team’s private data; shared league views behave per policy.
+- **Invite-only:** **No** unauthenticated path creates a user; new managers onboard **only** via a **valid, unexpired invite** tied to a team.
 - **Design:** New features **default** to new code behind **existing module boundaries**; route files stay thin; **no duplicated** league-rule logic outside `domain` / `recommendations`.
 
 ---
@@ -228,9 +230,8 @@ flowchart LR
 
 - **Roto vs points** scoring on Rotowire (affects recommendation math).
 - **Postgres vs SQLite** on Render (filesystem persistence vs managed DB).
-- **Registration policy:** **invite-only** (commish/seeds accounts) vs **open sign-up** with manual team approval.
 - **League-wide data:** single shared snapshot vs per-tenant copy—impacts storage and consistency.
 
 ---
 
-*Last updated: all managers are users; secretary excluded from app; Ousterhout-aligned layout.*
+*Last updated: invite-only auth; all managers are users; secretary excluded from app.*
