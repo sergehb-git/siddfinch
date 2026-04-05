@@ -1,0 +1,44 @@
+---
+description: John Ousterhout — A Philosophy of Software Design (design & code standards)
+alwaysApply: true
+---
+
+# Philosophy of Software Design (Ousterhout)
+
+Follow **John Ousterhout**, *A Philosophy of Software Design*: **reduce complexity** over time; prefer **strategic** fixes (improve structure) over **tactical** patches (shove behavior in without simplifying).
+
+## Complexity
+
+- Fight **dependency fan-out**, **obscurity**, and **amplification** (small change breaks many places).
+- If a change touches lots of files, **reconsider the abstraction** before spreading more glue.
+
+## Modules and abstractions
+
+- Prefer **deep modules**: **small, simple interface** hiding a **capable implementation**—not thin wrappers over every detail.
+- **Pull complexity downward** inside a module; don’t push it to callers.
+- **Different layer, different abstraction**: avoid pass-through functions that only forward to the next layer without adding meaning.
+- **Information hiding**: expose *what* and stable invariants, not internal representation unless necessary.
+
+## Structure
+
+- Avoid **temporal decomposition** (packages named after steps: `load_then_parse_then_save`). Organize by **knowledge / responsibility** (e.g. `ingest`, `domain`, `recommendations`, `api`).
+- Prefer **general mechanisms** over **special cases** and scattered `if` flags.
+
+## Errors and edge cases
+
+- **Define errors out of existence** where possible (APIs that can’t fail in normal use).
+- For recoverable faults: **narrow exceptions**, clear contracts, don’t blanket-swallow errors.
+
+## Naming and docs
+
+- **Precise, consistent** names; if naming is awkward, the decomposition may be wrong.
+- Comments belong at **module / class / key method** level to explain **why**, invariants, and tradeoffs—not to narrate obvious code line-by-line.
+
+## Process
+
+- For non-trivial design, consider **design it twice**: sketch alternatives, compare complexity cost.
+- **Measure** before optimizing; preserve **simplicity** unless profiling justifies cost.
+
+## Anti-patterns to flag
+
+- Configuration explosion, boolean soup, duplicated policy in many layers, “god” routes or scripts that mix HTTP + DB + business rules with no seams.
