@@ -1,6 +1,6 @@
 # Plan: Sidd Finch Moves (Python, Docker, Render)
 
-**Goal:** A Python web application, **containerized with Docker**, deployed on **Render**, named **Sidd Finch Moves**. Its purpose is to deliver **weekly move recommendations** aligned with the **transaction cadence** in the [**2026 NL league rules**](https://github.com/sergehb-git/siddfinch/blob/master/2026/rules/2026-rules.md): **Monday transaction days**, **weekly free-agent bidding timeline** (public bids Mon–Thu, sealed bids Fri–Sat, resolution Sun–Mon), **$260 season transaction budget**, **standings** (including tie-break and **Rule of Four** implications), and the **available player pool** (**NL free agents** eligible to bid, **waivers** after cuts, reserve rules). **v1** combines **read-only Rotowire** fetches (after the manager supplies the **league homepage URL** and **Rotowire credentials**) with a **copy-pasted** weekly secretary **email digest** for **authoritative budgets** and the **published new-waivers list**.
+**Goal:** A Python web application, **containerized with Docker**, deployed on **Render**, named **Sidd Finch Moves**. Its purpose is to deliver **weekly move recommendations** aligned with the **transaction cadence** in the [**2026 NL league rules**](https://github.com/sergehb-git/siddfinch/blob/master/2026/rules/2026-rules.md): **Monday transaction days**, **weekly free-agent bidding timeline** (public bids Mon–Thu, sealed bids Fri–Sat, resolution Sun–Mon), **$260 season transaction budget**, **standings** (including tie-break and **Rule of Four** implications), and the **available player pool** (**NL free agents** eligible to bid, **waivers** after cuts, reserve rules). **v1** combines **read-only Rotowire** fetches (after the manager supplies the **league homepage URL** and **Rotowire credentials**) with a **copy-pasted** weekly secretary **email digest** for **authoritative budgets** and the **published new-waivers list**. **Recommendations** use a **deterministic core** (rules + parsed data); an **optional LLM** may assist with **ranking and prose** only—see [Recommendations: deterministic core vs LLM](#recommendations-deterministic-core-vs-llm).
 
 **Primary audience:** **You and every other league manager** (e.g. **11 teams** in 2026). Each manager signs in to see **their** team’s **week-scoped** guidance: what to bid, what to claim, category pressure, and budget-aware priorities—not a generic “league admin” tool.
 
@@ -41,7 +41,7 @@
 | **2 — Auth (managers)** | **Invite-only:** no public registration. Commish (or delegate) **issues invites** (one-time token or magic link) per **league team**; manager **claims** invite, sets password, then uses **session cookies** or **JWT**. Passwords hashed (**bcrypt** / **argon2**). Each account is bound to **exactly one** team at invite creation. No shared “league password.” |
 | **3 — Data model** | Versioned **league snapshot** merging **Rotowire-derived** fields (standings, FA hitters/pitchers) with **digest-derived** fields (**budgets**, **new waivers** list). Private artifacts scoped by **`user_id` / `team_profile_id`**. Document invariants: e.g. budget numbers come **only** from the pasted digest unless you later add a second authoritative source. |
 | **4 — Ingest v1** | **Rotowire:** From pasted **league home URL**, derive fetch URLs; manager supplies **Rotowire credentials**; **read-only** scrape of **standings-live** + **free-agents** (hitters) + **free-agents `pos=P`** (pitchers). **Email:** **Copy-paste** weekly secretary digest → structured extract (standings snippet, Rule of Four, new waivers, budgets). **Merge** into one normalized snapshot for the recommendation engine. **Dev fallback:** fixture JSON for tests without live Rotowire. |
-| **5 — Weekly brain v1** | **Recommendations engine** driven by cadence in [**`2026/rules/2026-rules.md`**](https://github.com/sergehb-git/siddfinch/blob/master/2026/rules/2026-rules.md) (which **day of the week** actions apply; public vs sealed vs response phases), **standings** (Rotowire and/or digest—reconcile or prefer one with explicit policy), **budgets from digest**, **scoring categories** (offense: AVG, R, RBI, SB, TB+BB+HBP; pitching: W, SV, K, ERA, QS), **FA lists from Rotowire**, **waiver targets from digest**. Output: prioritized **weekly move list** with **initial FA bid** and **response bid ceiling** where rules support it, plus **waiver claim** suggestions; **plain-language rationale** (category need, Rule of Four if in top four, budget headroom). |
+| **5 — Weekly brain v1** | **Deterministic `WeeklyMovesEngine`:** cadence from [**`2026/rules/2026-rules.md`**](https://github.com/sergehb-git/siddfinch/blob/master/2026/rules/2026-rules.md) (which **day of the week**; public vs sealed vs response phases), **standings** (Rotowire and/or digest—reconcile or prefer one with explicit policy), **budgets from digest only** (never inferred by LLM), **scoring categories** (offense: AVG, R, RBI, SB, TB+BB+HBP; pitching: W, SV, K, ERA, QS), **FA lists from Rotowire**, **waiver names from digest**; **eligibility** (e.g. NL-only, Rule of Four, roster slots) and **bid caps** computed in **code**. Output: prioritized **weekly move list** with **initial FA bid** and **response bid ceiling** where rules support it, plus **waiver claim** suggestions; baseline **rationale** from structured logic. **Optional LLM layer:** re-rank within the **legal candidate set**, expand **natural-language rationale**, or polish copy—**validated** so any suggestion that violates budgets, eligibility, or procedure is **dropped or clamped**; app must run **with LLM disabled**. |
 | **6 — Rotowire hardening** | Resilient login (captcha / session expiry), **adapter tests** when HTML shifts, rate limits, clear “re-auth needed” UX. Align implementation with Rotowire **terms of use** (read-only, no abuse). |
 | **7 — Email helpers (optional)** | **Outbound:** managers generate FA / sealed-bid / add-drop drafts to the secretary. **Inbound (post–v1):** Gmail API or forward-to-parser—**not** required while v1 stays **copy-paste**. The secretary never logs into this app. |
 
@@ -65,6 +65,21 @@
 - **Container:** Single-stage or slim `python:3.12-slim` image; non-root user optional hardening pass.
 - **Render:** **Web Service** from **Dockerfile**; set `PORT` (Render injects); command listens on `0.0.0.0`.
 - **Persistence:** Start with **SQLite** in a **Render disk** (if attached) or switch early to **Render Postgres** if you need multi-instance or reliable file storage (ephemeral filesystem on free tier is a gotcha—**Postgres is safer** for production data).
+- **LLM (optional):** If used, call a hosted or local model via **env-configured** API; keep the **deterministic engine** the default path so tests and cold-start UX do not depend on the model.
+
+---
+
+## Recommendations: deterministic core vs LLM
+
+| Responsibility | **Deterministic code** (required) | **LLM** (optional) |
+| --- | --- | --- |
+| **Budgets** (remaining $, bid ceilings) | Parse from digest + enforce caps in code | **Do not use** for arithmetic or “what you can spend” |
+| **Eligibility** (NL-only, Rule of Four, who can be bid/claimed, roster shape) | Encode from rules + snapshot in `domain` / engine | **Do not use** as authority; may **narrate** decisions already taken in code |
+| **Procedure / cadence** (transaction day, FA week phase, sealed vs public) | Derive from calendar + [**rules doc**](https://github.com/sergehb-git/siddfinch/blob/master/2026/rules/2026-rules.md) in code | **Do not use** to interpret rules of procedure |
+| **Who to target / ordering / “why this player”** | Rule-based ranking from category gaps + standings | **May** assist: compare candidates, pros/cons, **within** the candidate set returned by the engine |
+| **Natural-language explanation** | Template strings from structured reasons | **May** rewrite or enrich, grounded on engine output |
+
+**Contract:** The LLM receives **already-validated DTOs** (candidate players, numeric caps, flags)—not raw HTML dumps as the sole source of truth. Responses should be **structured** (e.g. JSON schema) where possible, then **re-validated** before display. **Feature flag** or env toggle: **LLM off** = full value from the deterministic pack alone.
 
 ---
 
@@ -75,8 +90,8 @@ Apply *A Philosophy of Software Design* to this codebase—not as ceremony, but 
 | Principle | How it shows up here |
 | --- | --- |
 | **Strategic > tactical** | Refactor when a feature would scatter special cases; don’t stack `if league == …` across layers. |
-| **Deep modules** | **Narrow public API**, rich internals: e.g. one **`LeagueSnapshot`** type + **`SnapshotStore`** (load/save/version); **`WeeklyMovesEngine`** that takes snapshot + calendar “as-of” and returns **`RecommendationPack`** without callers knowing phase rules line-by-line; **`RotowireReader`** hides login + HTML/session mess behind a small surface (e.g. `fetch_rw_slice() → RotowireSlice`); **`DigestParser`** hides messy paste text behind `parse_digest(text) → DigestExtract` (then merge into `LeagueSnapshot`). |
-| **Pull complexity down** | Parsing imports, NL eligibility, waiver priority rules, and **day-of-week cadence** belong **inside** `domain` / `recommendations`—not in route handlers. |
+| **Deep modules** | **Narrow public API**, rich internals: e.g. one **`LeagueSnapshot`** type + **`SnapshotStore`** (load/save/version); **`WeeklyMovesEngine`** that takes snapshot + calendar “as-of” and returns **`RecommendationPack`** without callers knowing phase rules line-by-line; optional **`LlmAdvisor`** takes **`RecommendationPack` + legal candidates** and returns **copy / re-ordering** only after the engine; **`RotowireReader`** hides login + HTML/session mess behind a small surface (e.g. `fetch_rw_slice() → RotowireSlice`); **`DigestParser`** hides messy paste text behind `parse_digest(text) → DigestExtract` (then merge into `LeagueSnapshot`). |
+| **Pull complexity down** | Parsing imports, **NL eligibility**, waiver priority rules, **day-of-week cadence**, and **budget math** belong **inside** `domain` / `recommendations` (deterministic)—**not** in the LLM prompt as the authority; **not** in route handlers. |
 | **Different layer, different abstraction** | HTTP layer maps requests/responses only; **no pass-through** services that merely re-export the DB. |
 | **Avoid temporal decomposition** | Package by **knowledge**, not pipeline step names: `domain/`, `ingest/`, `recommendations/` (weekly moves + rules), `persistence/`, `api/` (or equivalent)—not `step1_load`, `step2_parse`. |
 | **Information hiding** | Persist snapshots as a **versioned blob + schema version** if it reduces coupling; expose **invariants** (“snapshot is immutable per id”; “recommendations are computed for a single `as_of` instant”) in module docstrings. |
@@ -104,9 +119,10 @@ flowchart TB
   ING --> DOM
   PER --> DOM
   AUTH -.->|user id for scoping| PER
+  REC -.->|optional enrich| LLM[LlmAdvisor]
 ```
 
-Lower layers (`domain`) must not import `api` or FastAPI.
+Lower layers (`domain`) must not import `api` or FastAPI. **`LlmAdvisor`** is optional glue **downstream of** **`WeeklyMovesEngine`** inside or beside `recommendations/`; it must not be imported by `domain`.
 
 ---
 
@@ -120,7 +136,7 @@ app/
   api/                 # HTTP: thin handlers, DTOs, deps
   domain/              # LeagueSnapshot, team, player, categories, budget, cadence keys—no FastAPI
   ingest/              # Rotowire fetch + URL parse; pasted weekly digest parser; fixtures
-  recommendations/     # weekly moves: snapshot + rules + as_of date → ranked actions
+  recommendations/     # WeeklyMovesEngine → RecommendationPack; optional LlmAdvisor (validate outputs)
   persistence/         # store/load snapshots, users, team profiles—hide SQL details
   auth/                # login, sessions, team binding—required for production
 data/                  # sample snapshots for dev/tests
@@ -140,7 +156,7 @@ plans/sidd-finch-moves.md  # this plan
 1. **Dockerfile** `CMD` uses `$PORT` (e.g. `sh -c 'uvicorn ... --port ${PORT:-8000}'`).
 2. **Health check** route (`/health`) for Render **health checks**.
 3. **`.dockerignore`** excludes `.git`, `.venv`, `__pycache__`.
-4. **Environment variables** on Render: no secrets in image; use dashboard or `render.yaml`.
+4. **Environment variables** on Render: no secrets in image; use dashboard or `render.yaml` (include **LLM API key** only if the optional advisor is enabled).
 5. **Cold starts:** document that first load after idle may lag; avoid long synchronous scrapes on the **first** request (use background job or manual trigger).
 
 ---
@@ -151,6 +167,7 @@ plans/sidd-finch-moves.md  # this plan
 - **Rate limiting** on auth and import endpoints; **account enumeration** resistance on **login** and **invite redemption** (generic errors, no “email not found” vs “wrong password” distinction).
 - Prefer **read-only** automation; align with Rotowire **terms of use**.
 - **Managers:** Never store plaintext passwords; **HTTPS** on Render (default); **invite-only** is **required**—no public registration endpoint in production.
+- **LLM provider (if enabled):** API keys in env only; **minimize** payload sent to the vendor (prefer compact DTOs over full digest HTML); document **retention** / zero-retention settings; align with league comfort on **exporting roster data** to a third party.
 
 ---
 
@@ -239,11 +256,13 @@ flowchart LR
 - **Multi-manager:** **Two or more** test accounts can log in concurrently; each sees **only** their team’s private data; shared league views behave per policy.
 - **Invite-only:** **No** unauthenticated path creates a user; new managers onboard **only** via a **valid, unexpired invite** tied to a team.
 - **Design:** New features **default** to new code behind **existing module boundaries**; route files stay thin; **no duplicated** league-rule or cadence logic outside `domain` / `recommendations`.
+- **LLM:** With LLM **disabled**, recommendations remain **correct per coded rules** (budgets, eligibility, procedure); with LLM **enabled**, UI still shows **engine numbers** as source of truth and treats model text as **assistive**.
 
 ---
 
 ## Open decisions (fill in as you go)
 
+- **LLM:** Hosted API vs **local** model; provider; **structured output** format; default **on vs off** for new users.
 - **Roto vs points** scoring on Rotowire (affects recommendation math).
 - **Postgres vs SQLite** on Render (filesystem persistence vs managed DB).
 - **League-wide data:** single shared snapshot vs per-tenant copy—impacts storage and consistency.
@@ -254,4 +273,4 @@ flowchart LR
 
 ---
 
-*Last updated: **v1** = Rotowire (league URL + credentials: standings + FA hitters/pitchers) + **copy-paste** weekly email (budgets + new waivers); both for complete bid/ceiling/waiver advice; Sidd Finch reference URLs for `leagueID=530`; invite-only auth; managers only; secretary excluded.*
+*Last updated: **v1** = Rotowire (league URL + credentials: standings + FA hitters/pitchers) + **copy-paste** weekly email (budgets + new waivers); both for complete bid/ceiling/waiver advice; Sidd Finch reference URLs for `leagueID=530`; **deterministic recommendation core** with **optional LLM** for ranking/prose only (not budgets, eligibility, or procedure); invite-only auth; managers only; secretary excluded.*
