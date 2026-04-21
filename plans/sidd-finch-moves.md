@@ -1,6 +1,6 @@
 # Plan: Sidd Finch Moves (Python, Docker, Render)
 
-**Goal:** A Python web application, **containerized with Docker**, deployed on **Render**, named **Sidd Finch Moves**. Its purpose is to deliver **weekly move recommendations** aligned with the **transaction cadence** in **2026 NL league rules** (`2026/rules/2026-rules.md`): **Monday transaction days**, **weekly free-agent bidding timeline** (public bids Mon–Thu, sealed bids Fri–Sat, resolution Sun–Mon), **$260 season transaction budget**, **standings** (including tie-break and **Rule of Four** implications), and the **available player pool** (**NL free agents** eligible to bid, **waivers** after cuts, reserve rules).
+**Goal:** A Python web application, **containerized with Docker**, deployed on **Render**, named **Sidd Finch Moves**. Its purpose is to deliver **weekly move recommendations** aligned with the **transaction cadence** in **2026 NL league rules** (`2026/rules/2026-rules.md`): **Monday transaction days**, **weekly free-agent bidding timeline** (public bids Mon–Thu, sealed bids Fri–Sat, resolution Sun–Mon), **$260 season transaction budget**, **standings** (including tie-break and **Rule of Four** implications), and the **available player pool** (**NL free agents** eligible to bid, **waivers** after cuts, reserve rules). **v1** combines **read-only Rotowire** fetches (after the manager supplies the **league homepage URL** and **Rotowire credentials**) with a **copy-pasted** weekly secretary **email digest** for **authoritative budgets** and the **published new-waivers list**.
 
 **Primary audience:** **You and every other league manager** (e.g. **11 teams** in 2026). Each manager signs in to see **their** team’s **week-scoped** guidance: what to bid, what to claim, category pressure, and budget-aware priorities—not a generic “league admin” tool.
 
@@ -12,8 +12,23 @@
 
 **Constraints / context:**
 
-- **Managers** use this app; **Rotowire** remains the league host (read automation **optional** / **brittle**). **Secretary** updates Rotowire outside the app.
+- **Managers** use this app; **Rotowire** remains the league host (read automation is **brittle**—HTML changes, login flows). **Secretary** updates Rotowire outside the app.
 - Render **free web services** **spin down** when idle; first request after sleep pays a **cold start**. Plan for that in UX (loading state) or upgrade to always-on later.
+
+**v1 data sources (both used):** **v1 uses Rotowire (league URL + the manager’s Rotowire credentials) for live standings and free-agent lists, and a copy-pasted weekly league email for authoritative season budgets and the published “New Waivers” list.** Recommendations for **bids, response ceilings, and waiver claims** should treat the pair as the **minimum complete dataset**; if one side is missing, the UI may still show partial advice (e.g. FA-only from Rotowire) but must **label** budget- and waiver-dependent guidance as **incomplete** until the latest digest is pasted.
+
+**Connecting the league (v1 UX):** After **app login**, the manager provides the **Rotowire league homepage URL** (see reference URLs below). The app parses **`leagueID`** and the **commish path** segment (e.g. `mlbcommish26`) so the same code works for other leagues with different IDs. The app then **challenges for Rotowire credentials** to establish an authenticated session for **read-only** fetches.
+
+**Reference URLs — Sidd Finch (`leagueID=530`):** These illustrate the four pages v1 targets; other leagues substitute their own `leagueID` and path.
+
+| Role | URL |
+| --- | --- |
+| League home (user-supplied; source of truth for ID/path) | `https://www.rotowire.com/mlbcommish26/league.php?leagueID=530` |
+| Cumulative / live standings | `https://www.rotowire.com/mlbcommish26/standings-live.php?leagueID=530` |
+| Free agent hitters (default FA list) | `https://www.rotowire.com/mlbcommish26/free-agents.php?leagueID=530` |
+| Free agent pitchers | `https://www.rotowire.com/mlbcommish26/free-agents.php?leagueID=530&pos=P` |
+
+**Weekly email digest (v1):** **Copy-paste** the secretary’s weekly message body into the app (no Gmail API in v1). The parser extracts **standings** (and Rule of Four line when present), **“New Waivers”** names, **transactions** (optional for context), and **budgets** (per team: previous total, this week, new total—the **authoritative** view of what each team has left for the season). Format changes over time: version the parser and keep **fixtures** from real samples in `data/` or tests.
 
 ---
 
@@ -24,11 +39,11 @@
 | **0 — Scaffold** | Repo layout, `Dockerfile`, health endpoint, `PORT` binding, local `docker compose` optional. |
 | **1 — Deploy** | Git-connected **Render** deploy from Dockerfile; secrets via Render **environment**; smoke test URL. |
 | **2 — Auth (managers)** | **Invite-only:** no public registration. Commish (or delegate) **issues invites** (one-time token or magic link) per **league team**; manager **claims** invite, sets password, then uses **session cookies** or **JWT**. Passwords hashed (**bcrypt** / **argon2**). Each account is bound to **exactly one** team at invite creation. No shared “league password.” |
-| **3 — Data model** | Versioned **league snapshot** (standings, rosters, budgets/spend, waiver state if modeled) and all private artifacts scoped by **`user_id` / `team_profile_id`** (required on write). League-wide **read** data (standings, published bid lists when available) stored per snapshot **version** with explicit access rules—pick one approach (shared vs per-tenant copy) and document invariants. |
-| **4 — Ingest v1** | **Manual import** (paste JSON/CSV or upload) **per logged-in manager** so the app works **without** Rotowire login. Snapshot must be sufficient to compute **category gaps vs league**, **place in standings**, **remaining transaction budget**, and **available NL players** (FA list + waiver pool as provided by import). |
-| **5 — Weekly brain v1** | **Recommendations engine** driven by: **`2026-rules.md`** cadence (which **day of the week** actions apply; public vs sealed vs response phases), **current standings**, **$260 budget** and spend-to-date, **scoring categories** (offense: AVG, R, RBI, SB, TB+BB+HBP; pitching: W, SV, K, ERA, QS), and **FA / waiver** candidates. Output: prioritized **weekly move list** (adds, bids, claims) with **plain-language rationale** (category need, Rule of Four if in top four, waiver priority notes when data exists). |
-| **6 — Rotowire connector (optional)** | Playwright or session-based **read-only** fetch to refresh rosters, standings, and available players; **per-user Rotowire session** if each manager uses their own Rotowire login, or a single service account if league policy allows—document security implications. |
-| **7 — Email helpers (optional)** | **Managers** generate **outbound** messages (e.g. FA bids, add/drop, sealed-bid emails) to the **secretary’s** address; optional **inbound** parse of **replies** to update “request status” in-app. The secretary never logs into this app. |
+| **3 — Data model** | Versioned **league snapshot** merging **Rotowire-derived** fields (standings, FA hitters/pitchers) with **digest-derived** fields (**budgets**, **new waivers** list). Private artifacts scoped by **`user_id` / `team_profile_id`**. Document invariants: e.g. budget numbers come **only** from the pasted digest unless you later add a second authoritative source. |
+| **4 — Ingest v1** | **Rotowire:** From pasted **league home URL**, derive fetch URLs; manager supplies **Rotowire credentials**; **read-only** scrape of **standings-live** + **free-agents** (hitters) + **free-agents `pos=P`** (pitchers). **Email:** **Copy-paste** weekly secretary digest → structured extract (standings snippet, Rule of Four, new waivers, budgets). **Merge** into one normalized snapshot for the recommendation engine. **Dev fallback:** fixture JSON for tests without live Rotowire. |
+| **5 — Weekly brain v1** | **Recommendations engine** driven by: **`2026-rules.md`** cadence (which **day of the week** actions apply; public vs sealed vs response phases), **standings** (Rotowire and/or digest—reconcile or prefer one with explicit policy), **budgets from digest**, **scoring categories** (offense: AVG, R, RBI, SB, TB+BB+HBP; pitching: W, SV, K, ERA, QS), **FA lists from Rotowire**, **waiver targets from digest**. Output: prioritized **weekly move list** with **initial FA bid** and **response bid ceiling** where rules support it, plus **waiver claim** suggestions; **plain-language rationale** (category need, Rule of Four if in top four, budget headroom). |
+| **6 — Rotowire hardening** | Resilient login (captcha / session expiry), **adapter tests** when HTML shifts, rate limits, clear “re-auth needed” UX. Align implementation with Rotowire **terms of use** (read-only, no abuse). |
+| **7 — Email helpers (optional)** | **Outbound:** managers generate FA / sealed-bid / add-drop drafts to the secretary. **Inbound (post–v1):** Gmail API or forward-to-parser—**not** required while v1 stays **copy-paste**. The secretary never logs into this app. |
 
 ---
 
@@ -60,12 +75,12 @@ Apply *A Philosophy of Software Design* to this codebase—not as ceremony, but 
 | Principle | How it shows up here |
 | --- | --- |
 | **Strategic > tactical** | Refactor when a feature would scatter special cases; don’t stack `if league == …` across layers. |
-| **Deep modules** | **Narrow public API**, rich internals: e.g. one **`LeagueSnapshot`** type + **`SnapshotStore`** (load/save/version); **`WeeklyMovesEngine`** (or equivalent) that takes snapshot + calendar “as-of” and returns **`RecommendationPack`** without callers knowing phase rules line-by-line; **`RotowireReader`** (optional) hides HTML/session mess behind `fetch_snapshot() → LeagueSnapshot` or a clear failure. |
+| **Deep modules** | **Narrow public API**, rich internals: e.g. one **`LeagueSnapshot`** type + **`SnapshotStore`** (load/save/version); **`WeeklyMovesEngine`** that takes snapshot + calendar “as-of” and returns **`RecommendationPack`** without callers knowing phase rules line-by-line; **`RotowireReader`** hides login + HTML/session mess behind a small surface (e.g. `fetch_rw_slice() → RotowireSlice`); **`DigestParser`** hides messy paste text behind `parse_digest(text) → DigestExtract` (then merge into `LeagueSnapshot`). |
 | **Pull complexity down** | Parsing imports, NL eligibility, waiver priority rules, and **day-of-week cadence** belong **inside** `domain` / `recommendations`—not in route handlers. |
 | **Different layer, different abstraction** | HTTP layer maps requests/responses only; **no pass-through** services that merely re-export the DB. |
 | **Avoid temporal decomposition** | Package by **knowledge**, not pipeline step names: `domain/`, `ingest/`, `recommendations/` (weekly moves + rules), `persistence/`, `api/` (or equivalent)—not `step1_load`, `step2_parse`. |
 | **Information hiding** | Persist snapshots as a **versioned blob + schema version** if it reduces coupling; expose **invariants** (“snapshot is immutable per id”; “recommendations are computed for a single `as_of` instant”) in module docstrings. |
-| **General mechanisms** | One **import pipeline** for manual JSON and Rotowire output; avoid duplicate validators per source. |
+| **General mechanisms** | One **merge pipeline**: Rotowire slice + digest extract → validated **`LeagueSnapshot`**; avoid duplicate “source of truth” for budget (digest only in v1). |
 | **Define errors out** | Prefer validation at import boundaries so recommendation code assumes a **valid** snapshot. |
 | **Comments at module level** | File/class docstrings for **why**, tradeoffs, and invariants; avoid line-by-line narration. |
 | **Design it twice** | For **weekly cadence** + auth boundaries, briefly sketch **two** shapes (e.g. explicit state machine vs date-driven policy table) and pick the **lower long-term complexity** option. |
@@ -104,7 +119,7 @@ app/
   main.py              # app factory, mount routers only
   api/                 # HTTP: thin handlers, DTOs, deps
   domain/              # LeagueSnapshot, team, player, categories, budget, cadence keys—no FastAPI
-  ingest/              # manual import, future Rotowire → domain types
+  ingest/              # Rotowire fetch + URL parse; pasted weekly digest parser; fixtures
   recommendations/     # weekly moves: snapshot + rules + as_of date → ranked actions
   persistence/         # store/load snapshots, users, team profiles—hide SQL details
   auth/                # login, sessions, team binding—required for production
@@ -132,7 +147,7 @@ plans/sidd-finch-moves.md  # this plan
 
 ## Security notes
 
-- **Rotowire credentials** (if ever used): env vars only; never commit; rotate if logs leak.
+- **Rotowire credentials:** Prefer **short-lived session** (cookies) over long-lived plaintext password storage; never log credentials or raw HTML containing session tokens; document rotation if a breach is suspected. Align with Rotowire **terms of use** for automated access.
 - **Rate limiting** on auth and import endpoints; **account enumeration** resistance on **login** and **invite redemption** (generic errors, no “email not found” vs “wrong password” distinction).
 - Prefer **read-only** automation; align with Rotowire **terms of use**.
 - **Managers:** Never store plaintext passwords; **HTTPS** on Render (default); **invite-only** is **required**—no public registration endpoint in production.
@@ -170,7 +185,8 @@ flowchart TB
   M1 -->|HTTPS + auth| A
   A --> W
   W --> DB
-  W -.->|optional read-only sync| RW
+  W -.->|read-only session| RW
+  M1 -->|league URL Rotowire login paste weekly digest| W
   M1 -->|transaction emails| SEC
   SEC --> RWwork
   RWwork -->|updates rosters| RW
@@ -181,12 +197,12 @@ flowchart TB
 ```mermaid
 flowchart LR
   subgraph ingest [Ingestion]
-    M[Manual import API or UI]
-    P[Rotowire connector - optional]
+    RW[Rotowire - URL + credentials]
+    EM[Paste weekly email digest]
   end
 
   subgraph core [Application core]
-    V[Validate + normalize snapshot]
+    V[Merge validate normalize snapshot]
     S[Store snapshot version]
     R[Weekly moves engine]
   end
@@ -195,8 +211,8 @@ flowchart LR
     API[JSON / UI - weekly recommendations]
   end
 
-  M --> V
-  P --> V
+  RW --> V
+  EM --> V
   V --> S
   S --> R
   R --> API
@@ -219,7 +235,7 @@ flowchart LR
 
 - **Docker:** `docker build` and `docker run -p 8000:8000` serve a healthy app locally.
 - **Render:** Auto-deploy on push; `/health` returns 200; no hard-coded secrets.
-- **Product:** With a **mock or pasted** league snapshot and a chosen **calendar date**, the UI or API returns a **week-appropriate** set of **actionable recommendations** (e.g. FA targets under budget, waiver claims when modeled, category gaps vs standings context—not only “weakest category vs median”).
+- **Product:** With **Rotowire data** (from URL + credentials) plus a **pasted weekly digest** (budgets + new waivers) and a chosen **calendar date**, the UI or API returns a **week-appropriate** set of **actionable recommendations** (FA targets with **opening bid** and **response ceiling**, waiver claims aligned with digest list, category gaps vs standings—and explicit **incomplete** state if digest or Rotowire slice is missing).
 - **Multi-manager:** **Two or more** test accounts can log in concurrently; each sees **only** their team’s private data; shared league views behave per policy.
 - **Invite-only:** **No** unauthenticated path creates a user; new managers onboard **only** via a **valid, unexpired invite** tied to a team.
 - **Design:** New features **default** to new code behind **existing module boundaries**; route files stay thin; **no duplicated** league-rule or cadence logic outside `domain` / `recommendations`.
@@ -231,9 +247,11 @@ flowchart LR
 - **Roto vs points** scoring on Rotowire (affects recommendation math).
 - **Postgres vs SQLite** on Render (filesystem persistence vs managed DB).
 - **League-wide data:** single shared snapshot vs per-tenant copy—impacts storage and consistency.
-- **How much of the FA weekly thread** is machine-readable (published bid list, Thursday state) vs **manual entry** for v1.
-- **Waiver queue / priority** fidelity in imports vs simplified “reverse standings” only.
+- **Standings reconciliation** when Rotowire **standings-live** and the digest **standings** block differ (timestamp skew): prefer one with explicit policy and surface the delta in UI if material.
+- **FA weekly thread** (published bids Thu, sealed Fri–Sat): still **manual** or separate v2 unless scraped from elsewhere.
+- **Waiver queue / priority:** digest gives **names on waivers**; full **reverse-standings priority** may still need Rotowire or rules inference—how much to automate in v1.
+- **Rotowire fetch stack:** Playwright vs HTTP client + cookies (captcha / bot checks).
 
 ---
 
-*Last updated: product scope is **Sidd Finch Moves**—weekly recommendations from rules cadence, budgets, standings, and FA/waiver availability; invite-only auth; managers only; secretary excluded.*
+*Last updated: **v1** = Rotowire (league URL + credentials: standings + FA hitters/pitchers) + **copy-paste** weekly email (budgets + new waivers); both for complete bid/ceiling/waiver advice; Sidd Finch reference URLs for `leagueID=530`; invite-only auth; managers only; secretary excluded.*
